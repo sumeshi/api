@@ -2,7 +2,16 @@
 
 Memorandum on windows forensics.
 
-## Artifacts
+## DumpTools
+
+### ntfsfind
+[ntfsfind](https://github.com/sumeshi/ntfsfind)
+
+### ntfsdump
+[ntfsdump](https://github.com/sumeshi/ntfsdump)
+
+
+## Parser
 
 ### $MFT
 [mft2es](https://github.com/sumeshi/mft2es)
@@ -15,4 +24,5 @@ Memorandum on windows forensics.
 
 ### Registry
 [reg2es](https://github.com/sumeshi/reg2es)
+
 
