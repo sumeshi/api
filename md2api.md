@@ -16,7 +16,7 @@ https://github.com/sumeshi/md2api
 
 変換されたAPIには, 下記のようにアクセスできます.
 
-```
+```{.text}
 元ファイル: https://github.com/sumeshi/api/md2api.md
 
 記事一覧: https://sumeshi.github.io/api/posts/
