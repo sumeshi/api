@@ -10,8 +10,9 @@ web上で自身の匿名性を担保するためにすべきこと、Torとか�
 
 ## 環境
 
-### OS
-#### [Tails](https://tails.boum.org/)
+### Tails
+[https://tails.boum.org/](https://tails.boum.org/)
+
 DebianベースのLinuxディストリビューション。  
 下記の理由でオススメ。
 
@@ -24,7 +25,10 @@ DebianベースのLinuxディストリビューション。
 あと、デフォルトでインストールされているTorブラウザはあんまり安全な設定になっていないので注意。  
 Javascriptはオフにしといたほうがいいし、他にも設定を見直すと吉。
 
-#### [Whonix](https://www.whonix.org/)
+
+### Whonix
+[https://www.whonix.org/](https://www.whonix.org/)
+
 こちらもDebianベースのLinuxディストリビューション。  
 通信の際に Whonix-Gateway を経由させることで、すべての通信をTor経由にすることができる。
 
@@ -39,11 +43,49 @@ VPNを使う場合、Tor over VPN と VPN over Tor と呼ばれる2つの手法�
 また、VPNを使用していない場合、自身の契約しているISPは、あなたがTorを使っていることを確認できるということにも注意。
 
 
-### 物理的環境
+### Telegram
+[https://telegram.org](https://telegram.org)
+
+匿名メッセンジャーアプリの代表格。  
+使ってないけどこれもどうなんだろう。ロシアだし。
+
+機能は豊富だけど、安全性は後述のSignalのがマシ。
+
+### Signal
+[https://signal.org](https://signal.org)
+
+e2e暗号化なのでTelegramより安心。  
+ただAPIが使いづらそう、ユーザも少ないし一長一短。
+
+### Protonmail
+[https://protonmail.com](https://protonmail.com)
+
+安全かって言われると微妙。IP保持しませんとか言っといて保持してたこともあったし、なんなら当局にデータ渡してた。  
+でもGmailよりはマシでしょ。多分。
+
+[徹底したプライバシー保護が売りのProtonMailが「IPログを保持しない」という文章をウェブサイトから削除](https://gigazine.net/news/20210908-protonmail-ip-address-privacy-policy/)
+
+### 10minutes mail
+[https://10minemail.com](https://10minemail.com)
+
+10分間だけ有効なメールアドレスを発行してくれる。  
+安全かと言われると微妙だけど、よくわからんサービスのために本アカ使いたくないときもあるよね。
+
+ちなみに、SMS認証のためにフリーの電話番号を公開してるサービスもあったりする。  
+大抵うまくいかないのであんまり期待しないように。
+
+### INetSim
+[https://www.inetsim.org/](https://www.inetsim.org/)
+
+DNS, HTTP, SMTPなど色々なプロトコルの通信先として振る舞ってくれる。  
+本来はマルウェア解析用で、変な通信を外部に出さないためのものなんだけど、こういうことにも使えるかもね。
+
+
+### 物理的セキュリティの確保
 物理的環境のセキュリティを確保することも忘れずに。というかこれが一番難しくて重要。  
 
 #### 機器
-高ければ良いというわけではないけど、安かろう悪かろうはだいたいそうなので、変なデバイスを使わない。
+高ければ良いというわけではないけど、安かろう悪かろうはだいたいそうなので、変なデバイスを使わない。  
 ガジェオタの人はHuaweiとかXiaomiとか有難がって使ってるのよく見るけど、リトアニア政府の調査によって検閲機能の搭載が報告されたこともある。
 
 [Assessment of cybersecurity of mobile devices supporting 5G technology sold in Lithuania](https://www.nksc.lt/doc/en/analysis/2021-08-23_5G-CN-analysis_env3.pdf)
@@ -61,36 +103,6 @@ webへの書き込みをした時間、頻度などから自分の年齢を絞�
 #### 通信環境
 自宅の回線からつなげている場合、IPアドレスや通信速度などから情報が得られることもある。  
 監視カメラの有無にも注意しながら街中のフリーWi-Fiを使うのが良いかもしれない。こんなことやってるのヤバいことやってる人ぐらいしかいなそうだけど。
-
-
-### ツール
-
-#### [Telegram](https://telegram.org)
-匿名メッセンジャーアプリの代表格。  
-使ってないけどこれもどうなんだろう。ロシアだし。
-
-機能は豊富だけど、安全性は後述のSignalのがマシ。
-
-#### [Signal](https://signal.org)
-e2e暗号化なのでTelegramより安心。  
-ただAPIが使いづらそう、ユーザも少ないし一長一短。
-
-#### [Protonmail](https://protonmail.com)
-安全かって言われると微妙。IP保持しませんとか言っといて保持してたこともあったし、なんなら当局にデータ渡してた。  
-でもGmailよりはマシでしょ。多分。
-
-[徹底したプライバシー保護が売りのProtonMailが「IPログを保持しない」という文章をウェブサイトから削除](https://gigazine.net/news/20210908-protonmail-ip-address-privacy-policy/)
-
-#### [10minutes mail](https://10minemail.com)
-10分間だけ有効なメールアドレスを発行してくれる。  
-安全かと言われると微妙だけど、よくわからんサービスのために本アカ使いたくないときもあるよね。
-
-ちなみに、SMS認証のためにフリーの電話番号を公開してるサービスもあったりする。  
-大抵うまくいかないのであんまり期待しないように。
-
-#### [INetSim](https://www.inetsim.org/)
-DNS, HTTP, SMTPなど色々なプロトコルの通信先として振る舞ってくれる。  
-本来はマルウェア解析用で、変な通信を外部に出さないためのものなんだけど、こういうことにも使えるかもね。
 
 
 ## 終わりに
