@@ -35,7 +35,15 @@ Nuitkaはpythonのソースを一旦C言語にトランスパイルしてビル�
 $ nuitka --follow-imports --onefile main.py
 ```
 
-使ってて何か気づいたら追記していきます
+CIで実行するときには途中で必要モジュールのダウンロードをして良いか聞かれるので、下記のオプションを有効にしてあげるといいっぽいです。
+```
+--assume-yes-for-downloads
+```
+
+[ntfsdump](https://github.com/sumeshi/ntfsdump) をNuitkaに乗り換えようとしてるんですけどなんかうまくいかなくて頭抱えてます。  
+ローカルだとうまくいくのに！なぜ！！
+
+よくわからないのでひとまず後回しにします。
 
 ## 参考文献
 - [PyInstaller より圧倒的に優れている Nuitka の使い方とハマったポイント](https://blog.tsukumijima.net/article/python-nuitka-usage/)
