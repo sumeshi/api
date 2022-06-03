@@ -45,6 +45,8 @@ CIで実行するときには途中で必要モジュールのダウンロード
 
 よくわからないのでひとまず後回しにします。
 
+追記: これかも [https://github.com/Nuitka/Nuitka/issues/1506](https://github.com/Nuitka/Nuitka/issues/1506)
+
 ## 参考文献
 - [PyInstaller より圧倒的に優れている Nuitka の使い方とハマったポイント](https://blog.tsukumijima.net/article/python-nuitka-usage/)
 - [[Python] Pyinstallerで実行ファイルがマルウェアに分類されてしまったときの対策](https://gamingpc.one/dev/python-pyinstaller/)
