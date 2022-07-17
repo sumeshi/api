@@ -39,6 +39,14 @@ https://www.pfsense.org/
 ### 3. pfSenseの設定
 インストール後、rebootが終わると初期ネットワーク設定を聞かれる。
 
+ネットワーク設定が終わったら次のコマンドでpfSenseのWEBUIにアクセスできるようにする。
+
+```
+$ pfctl -d
+```
+
+FW設定でうまいことアレをあれする
+
 実はまだ途中なので後で書く
 
 参考: https://devblog.lac.co.jp/entry/20220413
