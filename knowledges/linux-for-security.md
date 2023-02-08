@@ -57,7 +57,7 @@ Gatewayと組み合わせていい感じに使ってねってことなのかも�
 [https://twitter.com/sum3sh1/status/1492030729194438657](https://twitter.com/sum3sh1/status/1492030729194438657)
 
 - [sumeshi/evtx2es](https://github.com/sumeshi/evtx2es)  
-- [sumeshi/mft2es](https://github.com/sumeshi/evtx2es)  
+- [sumeshi/mft2es](https://github.com/sumeshi/mft2es)  
 
 [https://tsurugi-linux.org/](https://tsurugi-linux.org/)
 
