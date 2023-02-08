@@ -32,7 +32,7 @@ Kaliが重かった時代はこれをメインに使ってました。見た目�
 [https://tails.boum.org/](https://tails.boum.org/)
 
 
-# Whonix
+## Whonix
 匿名性に重きをおいたDistribution  
 Whonix-GatewayとWhonix-Workstationがセットで配布されてる。
 
