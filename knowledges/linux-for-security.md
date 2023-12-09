@@ -46,6 +46,15 @@ Gatewayと組み合わせていい感じに使ってねってことなのかも�
 
 参考資料: [ITショシンシャの苦悩 - Whonix-Gatewayを構築してみた件](https://no-voids.hatenablog.com/entry/20210926)
 
+## CAINE
+C.A.IN.E. (Computer Aided Investigative Environment) の通り、PCを対象とした調査支援環境です。  
+フォレンジック用のLinuxはいくつかありますが、明確にそれを目的として活発に開発が続いているのは現在これくらいかなと思います。  
+[https://www.caine-live.net/](https://www.caine-live.net/)
+
+保全用ドキュメントが公開されたりしていて使いやすいです。  
+Live起動はそんなに早くない。  
+
+[使ってみた](https://sumeshi.github.io/posts/tools/caine)
 
 ## Tsurugi Linux
 インシデントレスポンス・デジタルフォレンジックに重きをおいたDistribution  
