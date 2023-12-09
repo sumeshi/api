@@ -6,14 +6,17 @@ Computer Aided Investigative Environment の通り、PCを対象とした調査�
 フォレンジック用のLinuxはいくつかありますが、明確にそれを目的として活発に開発が続いているのは現在これくらいかなと思います。  
 [https://www.caine-live.net/](https://www.caine-live.net/)
 
-この手のセキュリティ系LinuxはDebianを元にしているものが多いですが、CAINEはUbuntuベースです。
+この手のセキュリティ系LinuxはDebianを元にしているものが多いですが、CAINEはUbuntuベースです。  
+
+関連記事: [セキュリティ研究者向けLinuxディストリビューションまとめ](https://sumeshi.github.io/posts/knowledges/linux-for-security)
+
 
 ## インストール
 CAINE 13.0 "WARP" を対象とします。  
 ダウンロードしたらハッシュ値をチェックします。サイトが改ざんされていたら元も子もないですが一応。  
 
-```powershell
-> certutil -hashfile caine13.0.iso sha256
+```
+› certutil -hashfile caine13.0.iso sha256
 SHA256 hash of caine13.0.iso:
 6d25180757d6a8a71e98706009d7a9ba3613131727fc96c2037d78bbd4c8ce3a
 CertUtil: -hashfile command completed successfully.
