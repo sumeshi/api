@@ -39,7 +39,7 @@ Whonix-GatewayとWhonix-Workstationがセットで配布されてる。
 Whonix-Gatewayは、tor接続用のプロキシとして使うことができる。  
 WindowsなりUbuntuなり、その端末から出る通信すべてをtor経由にしたい場合に、このOSを通すと便利。
 
-Whonix-Workstationは存在理由が不明。  
+Whonix-Workstationはよくわかりません。  
 Gatewayと組み合わせていい感じに使ってねってことなのかもしれないけど、特段使う理由がないし使ってる人も見たことない。
 
 [https://www.whonix.org/](https://www.whonix.org/)
@@ -75,25 +75,25 @@ Live起動はそんなに早くない。
 インシデントレスポンス・デジタルフォレンジックに重きをおいたDistribution  
 ダウンロードするのにSANSのアカウントが必要です。
 
-あんまり更新されないし見た目も古臭いので私はそんなに好きじゃないです。  
-使い勝手も微妙なので、同ページ内にある「UbuntuにSIFTをインストールする方法」でツール一式ダウンロードしたほうがいいかもね。知らんけど。
+イメージはあんまり更新されないです。  
+同ページ内にある「UbuntuにSIFTをインストールする方法」でツール一式ダウンロードしたほうがいいかもね。知らんけど。
 
 [https://www.sans.org/tools/sift-workstation/](https://www.sans.org/tools/sift-workstation/)
 
 
 ## REMnux
 マルウェア解析に重きをおいたDistribution  
-アイコンがかっこいいです。使い勝手は微妙。
+アイコンがかっこいいです。使い勝手は。。。
 
 [https://remnux.org/](https://remnux.org/)
 
 
 ## Qubes OS
-何でもかんでもvmでやって環境隔離することでセキュリティを担保しましょうよ、という思想のOSっぽい。  
-思想はすごく好きだけどUIがダサいので使ったことない。
+何でもかんでもvmでやって環境隔離することでセキュリティを担保しましょうよ、という思想のOS。  
+インターネットに接続するのにもそれ用のvmがあってそれと接続して...という感じ。  
 
-普段遣いPCで悪いことする人にはかなりよさそう。  
-あとスペックにはかなり余裕をもたせる必要がありそうなのでデスクトップとかがいいのかな。
+しばらく使ってみましたが普段遣いはマジ面倒です。でも本気でセキュリティを考えたいならおすすめ。  
+Xenベースでスペックにはかなり余裕をもたせる必要があるので、デスクトップとかで使うのがいいです。
 
 [https://www.qubes-os.org/](https://www.qubes-os.org/)
 
@@ -105,7 +105,10 @@ Live起動はそんなに早くない。
 [https://subgraph.com/](https://subgraph.com/)
 
 
+## DEFT Linux
+たぶんもう配布されてないです。  
+フォレンジック用ツールではよく名前が上がってますが、今ならCAINEでいいんじゃないかなと思います。  
+
 ## 後で書く
-- deft linux
 - blackarch linux
 - kodachi
