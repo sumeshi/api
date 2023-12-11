@@ -7,6 +7,7 @@
 
 |Category|Name|Overview|License|Note|
 |-|-|-|-|-|
+|OS|[CAINE](https://sumeshi.github.io/posts/tools/caine)|フォレンジック用Linux|[LGPL](https://www.caine-live.net)||
 ||Wireshark|ネットワークトラフィックのキャプチャと分析。|||
 ||IDA Pro|強力なディスアセンブラとデバッガ。|||
 ||OllyDbg|対話型デバッギングツール。|||
