@@ -15,11 +15,11 @@
 |ToolKit|Sysinternals Suite|Windowsシステムユーティリティ|||
 |Disassembler|IDA|静的解析用ディスアセンブラ&デバッガ|||
 |Disassembler|Ghidra|静的解析用ディスアセンブラ&デバッガ|||
-|Debugger|WinDbg|(x86|x64)カーネルモードに対応したデバッガ|||
-|Debugger|x64dbg|(x86|x64)デバッガ|||
+|Debugger|WinDbg|(x86-x64)カーネルモードに対応したデバッガ|||
+|Debugger|x64dbg|(x86-x64)デバッガ|||
 |Debugger|Immunity Debugger|(x86)デバッガ|||
 |Debugger|OllyDbg|(x86)デバッガ|||
-|Debugger|Radare2|(x86|x64)TUIデバッガ|||
+|Debugger|Radare2|(x86-x64)TUIデバッガ|||
 ||Wireshark|ネットワークトラフィックのキャプチャと分析。|||
 ||VirusTotal|ファイルやURLを複数のアンチウイルスでスキャン。|||
 ||Maltego|データマイニングと情報収集ツール。|||
