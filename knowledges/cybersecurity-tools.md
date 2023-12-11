@@ -7,11 +7,20 @@
 
 |Category|Name|Overview|License|Note|
 |-|-|-|-|-|
-|OS|[CAINE](https://sumeshi.github.io/posts/tools/caine)|フォレンジック用Linux|[LGPL](https://www.caine-live.net)||
+|OS|[CAINE](https://sumeshi.github.io/posts/tools/caine)|フォレンジックに特化したLinux Distro|[LGPL](https://www.caine-live.net)||
+|OS|Kali Linux|ペネトレーションテストに特化したLinux Distro|||
+|OS|Parrot Security|ペネトレーションテストに特化したLinux Distro|||
+|OS|Qubes OS|匿名性に特化したLinux Ditro|||
+|OS|REMnux|マルウェア解析に特化したLinux Distro|||
+|ToolKit|Sysinternals Suite|Windowsシステムユーティリティ|||
+|Disassembler|IDA|静的解析用ディスアセンブラ&デバッガ|||
+|Disassembler|Ghidra|静的解析用ディスアセンブラ&デバッガ|||
+|Debugger|WinDbg|(x86|x64)カーネルモードに対応したデバッガ|||
+|Debugger|x64dbg|(x86|x64)デバッガ|||
+|Debugger|Immunity Debugger|(x86)デバッガ|||
+|Debugger|OllyDbg|(x86)デバッガ|||
+|Debugger|Radare2|(x86|x64)TUIデバッガ|||
 ||Wireshark|ネットワークトラフィックのキャプチャと分析。|||
-||IDA Pro|強力なディスアセンブラとデバッガ。|||
-||OllyDbg|対話型デバッギングツール。|||
-||Ghidra|NSAが開発したオープンソースの逆コンパイラ。|||
 ||VirusTotal|ファイルやURLを複数のアンチウイルスでスキャン。|||
 ||Maltego|データマイニングと情報収集ツール。|||
 ||YARA|マルウェアのパターンと識別特徴を定義。|||
@@ -21,24 +30,18 @@
 ||Cuckoo Sandbox|マルウェアを安全な環境で実行して分析。|||
 ||Apktool|Android APKファイルのデコンパイルと再構築。|||
 ||Fiddler|HTTPトラフィックのキャプチャと分析。|||
-||Sysinternals Suite|Windowsシステムユーティリティのコレクション。|||
 ||Tcpdump|コマンドラインベースのパケットアナライザ。|||
 ||Regshot|レジストリの変更を監視。|||
-||x64dbg|64ビットプラットフォーム向けデバッガ。|||
 ||Burp Suite|ウェブアプリケーションセキュリティテスティング。|||
 ||Binary Ninja|低レベルのバイナリ解析ツール。|||
-||Radare2|ポータブルリバースエンジニアリングフレームワーク。|||
 ||Snort|ネットワーク侵入検出システム。|||
 ||Suricata|高性能なネットワークIDS、IPS、NSM。|||
 ||Binwalk|ファームウェア解析ツール。|||
-||REMnux|マルウェア解析のためのLinuxディストリビューション。|||
 ||Autopsy|デジタルフォレンジックプラットフォーム。|||
 ||Metasploit Framework|ペネトレーションテスト用ツールキット。|||
-||Immunity Debugger|プログラム解析とデバッグ。|||
 ||FireEye FLARE VM|マルウェア解析用のWindowsベースのVM。|||
 ||Sandboxie|アプリケーションを隔離して実行。|||
 ||Packer Identifier (PID)|実行ファイルのパッカー識別。|||
-||Kali Linux|セキュリティテスト用のLinuxディストリビューション。|||
 ||Plaso|ログファイルの解析とタイムライン作成。|||
 ||Redline|メモリとファイル解析ツール。|||
 ||ThreatGrid|Ciscoのクラウドベースのマルウェア解析。|||
@@ -60,8 +63,6 @@
 ||Xplico|ネットワークトラフィックデコーダー。|||
 ||Hopper Disassembler|バイナリ解析およびディスアセンブリング。|||
 ||Joxean Koret's Pyew|Pythonによるコマンドラインヘキサエディタ兼解析ツール。|||
-||Radare2|Unixライクなリバースエンジニアリングフレームワーク。|||
-||IDA Free|フリー版の逆アセンブラおよびデバッガ。|||
 ||X-Ways Forensics|高度なフォレンジック分析ツール。|||
 ||CyberChef|Webベースの暗号、デコード、データ分析ツール。|||
 ||de4dot|.NETのアセンブリのオブファスケーションを解除するためのツール。|||
@@ -70,6 +71,7 @@
 ||SysAnalyzer|自動的に実行可能ファイルの動作を分析。|||
 ||bin2h|バイナリファイルをC/C++のヘッダファイルに変換。|||
 ||Bokken|GUIベースのバイナリ解析ツール。|||
+||Paros Proxy|Webアプリケーションセキュリティテスト用のプロキシ。|||
 ||Ether|アクティブなWindowsシステムに対するマルウェア解析。|||
 ||Faraday|協調的なペネトレーションテストおよび脆弱性管理プラットフォーム。|||
 ||Flare VM|Windowsベースのセキュリティリサーチおよびマルウェア解析用のVM。|||
@@ -97,7 +99,6 @@
 ||hashcat|高速なパスワードクラッキングツール。|||
 ||Honeyd|ネットワークホストシミュレータ。|||
 ||Hybrid Analysis|クラウドベースのマルウェア解析サービス。|||
-||IDA Home|ホームユーザー向けの逆アセンブラとデバッガ。|||
 ||Immunity Canvas|ペネトレーションテストツール。|||
 ||John the Ripper|パスワードクラックツール。|||
 ||JTAGulator|ハードウェアハッキングデバイス。|||
@@ -106,5 +107,3 @@
 ||NESSUS|脆弱性スキャナ。|||
 ||NinjaRMM|リモート監視および管理ソフトウェア。|||
 ||Omnipeek|ネットワーク分析ツール。|||
-||Paros Proxy|Webアプリケーションセキュリティテスト用のプロキシ。|||
-||Qubes OS|セキュリティに焦点を当てたデスクトップOS。|||
