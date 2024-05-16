@@ -13,8 +13,10 @@
 |OS|Qubes OS|匿名性に特化したLinux Ditro|||
 |OS|REMnux|マルウェア解析に特化したLinux Distro|||
 |ToolKit|Sysinternals Suite|Windowsシステムユーティリティ|||
-|Disassembler|IDA|静的解析用ディスアセンブラ&デバッガ|||
-|Disassembler|Ghidra|静的解析用ディスアセンブラ&デバッガ|||
+|Disassembler|[IDA](https://hex-rays.com/ida-pro/)|静的解析用ディスアセンブラ&デバッガ|||
+|Disassembler|[Ghidra](https://ghidra-sre.org/)|静的解析用ディスアセンブラ&デバッガ|||
+|Disassembler|[Binary Ninja](https://binary.ninja/)|静的解析用ディスアセンブラ&デバッガ|||
+|Disassembler|[Malcat](https://malcat.fr/index.html)|静的解析用ディスアセンブラ&デバッガ|||
 |Debugger|WinDbg|(x86-x64)カーネルモードに対応したデバッガ|||
 |Debugger|x64dbg|(x86-x64)デバッガ|||
 |Debugger|Immunity Debugger|(x86)デバッガ|||
