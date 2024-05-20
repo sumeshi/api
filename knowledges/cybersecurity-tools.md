@@ -28,9 +28,9 @@
 |BinaryEditor|[Dependency Walker](https://www.dependencywalker.com/)|実行ファイルの依存関係を一覧表示してくれる。|||
 |BinaryEditor|[PeStudio](https://www.winitor.com/)|PEファイルの解析に非常に有用。大体なんでもできる。|||
 |BinaryEditor|[PE-bear](https://github.com/hasherezade/pe-bear)|PEファイルの解析に非常に有用。|||
-|BinaryEditor|[XPEViewer](https://github.com/horsicq/XPEViewer)|PEファイルの解析に非常に有用。色々項目の編集もできる。￥|||
-|BinaryEditor|[XELFViewer](https://github.com/horsicq/XELFViewer)|実行ファイルの解析に特化したツール。|||
-|BinaryEditor|[ResourceHacker](https://www.angusj.com/resourcehacker/)|Exeのアイコン変えるのに|||
+|BinaryEditor|[XPEViewer](https://github.com/horsicq/XPEViewer)|PEファイルの解析に非常に有用。色々項目の編集もできる。|||
+|BinaryEditor|[XELFViewer](https://github.com/horsicq/XELFViewer)|ELFファイルの解析に非常に有用。色々項目の編集もできる。|||
+|BinaryEditor|[ResourceHacker](https://www.angusj.com/resourcehacker/)|Exeのアイコン変えるのに使ったりする。|||
 ||Wireshark|ネットワークトラフィックのキャプチャと分析。|||
 ||VirusTotal|ファイルやURLを複数のアンチウイルスでスキャン。|||
 ||Maltego|データマイニングと情報収集ツール。|||
