@@ -17,16 +17,24 @@
 |Disassembler|[Ghidra](https://ghidra-sre.org/)|静的解析用ディスアセンブラ&デバッガ|||
 |Disassembler|[Binary Ninja](https://binary.ninja/)|静的解析用ディスアセンブラ&デバッガ|||
 |Disassembler|[Malcat](https://malcat.fr/index.html)|静的解析用ディスアセンブラ&デバッガ|||
-|Debugger|WinDbg|(x86-x64)カーネルモードに対応したデバッガ|||
-|Debugger|x64dbg|(x86-x64)デバッガ|||
-|Debugger|Immunity Debugger|(x86)デバッガ|||
-|Debugger|OllyDbg|(x86)デバッガ|||
-|Debugger|Radare2|(x86-x64)TUIデバッガ|||
+|Debugger|[WinDbg](https://learn.microsoft.com/ja-jp/windows-hardware/drivers/debugger/)|(x86-x64)カーネルモードに対応したデバッガ|||
+|Debugger|[x64dbg](https://x64dbg.com/)|(x86-x64)デバッガ|||
+|Debugger|[Immunity Debugger](https://www.immunityinc.com/products/debugger/)|(x86)デバッガ|||
+|Debugger|[OllyDbg](https://www.ollydbg.de/)|(x86)デバッガ|||
+|Debugger|[Radare2](https://rada.re/n/radare2.html)|(x86-x64)TUIデバッガ|||
+|BinaryEditor|[Detect-It-Easy](https://github.com/horsicq/Detect-It-Easy)|バイナリファイルのパッカーや暗号化ツールの識別に。|||
+|BinaryEditor|[HxD](https://mh-nexus.de/en/hxd/)|高機能なバイナリエディタ。バイナリをC言語表現とかでコピーできるので、シェルコードの編集とかに有用。|||
+|BinaryEditor|FileInsight|高機能なバイナリエディタ。プラグインが豊富。||[DLリンク](https://downloadcenter.trellix.com/products/mcafee-avert/fileinsight.msi)は生存|
+|BinaryEditor|[Dependency Walker](https://www.dependencywalker.com/)|実行ファイルの依存関係を一覧表示してくれる。|||
+|BinaryEditor|[PeStudio](https://www.winitor.com/)|PEファイルの解析に非常に有用。大体なんでもできる。|||
+|BinaryEditor|[PE-bear](https://github.com/hasherezade/pe-bear)|PEファイルの解析に非常に有用。|||
+|BinaryEditor|[XPEViewer](https://github.com/horsicq/XPEViewer)|PEファイルの解析に非常に有用。色々項目の編集もできる。￥|||
+|BinaryEditor|[XELFViewer](https://github.com/horsicq/XELFViewer)|実行ファイルの解析に特化したツール。|||
+|BinaryEditor|[ResourceHacker](https://www.angusj.com/resourcehacker/)|Exeのアイコン変えるのに|||
 ||Wireshark|ネットワークトラフィックのキャプチャと分析。|||
 ||VirusTotal|ファイルやURLを複数のアンチウイルスでスキャン。|||
 ||Maltego|データマイニングと情報収集ツール。|||
 ||YARA|マルウェアのパターンと識別特徴を定義。|||
-||PEiD|バイナリファイルのパッカーや暗号化ツールを識別。|||
 ||Process Hacker|システムプロセスやサービスを監視。|||
 ||Volatility|メモリフォレンジックフレームワーク。|||
 ||Cuckoo Sandbox|マルウェアを安全な環境で実行して分析。|||
@@ -35,7 +43,6 @@
 ||Tcpdump|コマンドラインベースのパケットアナライザ。|||
 ||Regshot|レジストリの変更を監視。|||
 ||Burp Suite|ウェブアプリケーションセキュリティテスティング。|||
-||Binary Ninja|低レベルのバイナリ解析ツール。|||
 ||Snort|ネットワーク侵入検出システム。|||
 ||Suricata|高性能なネットワークIDS、IPS、NSM。|||
 ||Binwalk|ファームウェア解析ツール。|||
@@ -68,7 +75,6 @@
 ||X-Ways Forensics|高度なフォレンジック分析ツール。|||
 ||CyberChef|Webベースの暗号、デコード、データ分析ツール。|||
 ||de4dot|.NETのアセンブリのオブファスケーションを解除するためのツール。|||
-||PeStudio|実行ファイルの解析に特化したツール。|||
 ||PDF Stream Dumper|PDFファイル解析および修復ツール。|||
 ||SysAnalyzer|自動的に実行可能ファイルの動作を分析。|||
 ||bin2h|バイナリファイルをC/C++のヘッダファイルに変換。|||
