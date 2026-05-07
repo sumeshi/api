@@ -1,6 +1,7 @@
 # 君たちはどうWindowsイベントログを調査するか
 Windowsイベントログ調査のぼんやりメモ。思い出したら追記。
 
+<img width="960" height="540" alt="header-img" src="https://github.com/user-attachments/assets/e5be3f07-66c4-4419-9952-27a467b2e29e" />
 
 ## はじめに
 
