@@ -616,6 +616,8 @@ stages:
 
 <img width="1051" height="628" alt="image" src="https://github.com/user-attachments/assets/2727736a-dc4c-4f9c-8ebd-775fd5681d84" />
 
+Securityログは [JPCERTCC/LogonTracer] より
+
 
 ## おわりに
 
