@@ -6,7 +6,7 @@ Vague notes on Windows event log investigation. I'll add more as I remember.
 
 ## Introduction
 
-Because I wanted something like a Japanese-language document for doing Windows event log investigations.  
+I wanted something like a document for doing Windows event log investigations, so here it is.  
 Mainly from an **incident response perspective**.
 
 The purpose of event log investigation is **not to comprehensively scoop up every suspicious event ID, but to grasp what happened in the target environment and connect it to initial response and further investigation**.  
@@ -15,14 +15,14 @@ Given that premise, keep the following in mind at minimum.
 - Event logs only tell you about what's still around.
     - Quite a lot of events aren't recorded by default. Depends on the [audit policy](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/audit-policy-recommendations?tabs=winclient).
     - Old event logs get overwritten. Depends on the [rotation settings](https://learn.microsoft.com/en-us/security-updates/planningandimplementationguide/19869709).
-    - Logs can also be deleted by the attacker. [There are even cases where deletion is automated in ransomware incidents](https://www.cybereason.co.jp/blog/threat-analysis-report/10544/), so sometimes you can't tell a thing from the surviving logs alone.
+    - Logs can also be deleted by the attacker. [There are even cases where deletion is automated in ransomware incidents](https://www.cybereason.com/blog/threat-analysis-assemble-lockbit-3), so sometimes you can't tell a thing from the surviving logs alone.
     - The possibility of log tampering can't be ruled out either. EVTX has a [checksum mechanism for integrity checking](https://github.com/libyal/libevtx/blob/main/documentation/Windows%20XML%20Event%20Log%20(EVTX).asciidoc), but it's not a cryptographic tamper-protection mechanism. It costs more than simple deletion, so you don't see it much.
     - From the above, it's important for an analyst to **not treat surviving event logs as standalone facts**, but to **build and verify hypotheses about the attacker's actions** while cross-referencing other artifacts.
 - Preserve logs first thing
     - Even while you're reading this article, new events are being recorded and old ones overwritten.
-    - The Security log, which is especially important evidence, gets overwritten fast. You're lucky if a few days' worth survives, and sometimes only a few hours' worth is left. ([Like when it's buried under logon failures.](https://www.softwareisac.jp/a2ad/log-analysis-4625/))
+    - The Security log, which is especially important evidence, gets overwritten fast. You're lucky if a few days' worth survives, and sometimes only a few hours' worth is left. ([Like when it's buried under logon failures.](https://learn.microsoft.com/en-us/answers/questions/198575/event-log-failure-4625-(brute-force-attack)))
     - If you've got time to hesitate, preserve first.
-- How to cut noise out of a massive pile of logs? Hugely important.
+- How to cut noise out of a massive pile of event logs? Hugely important.
     - Be prepared to look at a few GB per client machine, and tens to hundreds of GB per server.
     - Understanding how the device is normally used and what events it records is the first step in cutting noise.
     - "Just look at everything, you say?" I will punch you.
@@ -84,7 +84,7 @@ Even more niche ones are sometimes written up in the [exabeam Documentation](htt
 
 If you know the tools or techniques used, it's good to look for traces while referring to things like JPCERT/CC's [Tool Analysis Result Sheet](https://jpcertcc.github.io/ToolAnalysisResultSheet_jp/).
 
-You can also look at Yamato Security's [Guide to Windows Event Log Settings for DFIR and Threat Hunting](https://github.com/Yamato-Security/EnableWindowsLogSettings/blob/main/README-Japanese.md). It references [Sigma](https://github.com/sigmahq/sigma) and discusses what the default event log settings look like. If possible, look at the original [Sigma](https://github.com/sigmahq/sigma) rule definitions, but there are so many you couldn't possibly memorize them.
+You can also look at Yamato Security's [Guide to Windows Event Log Settings for DFIR and Threat Hunting](https://github.com/Yamato-Security/EnableWindowsLogSettings/blob/main/README.md). It references [Sigma](https://github.com/sigmahq/sigma) and discusses what the default event log settings look like. If possible, look at the original [Sigma](https://github.com/sigmahq/sigma) rule definitions, but there are so many you couldn't possibly memorize them.
 
 
 ## Log Analysis and Hypothesis Building
@@ -117,7 +117,7 @@ Once you find a suspicious event as a starting point, diligently tracing the tim
 ### Logon / Authentication
 
 Look at who, when, from where, logged onto which machine (lateral movement).  
-Start investigating from the device where the problem occurred, or the bastion server that's the entry point from the internet.
+Start investigating from the device where the problem occurred, or the jump server that's the entry point from the internet.
 
 When looking, be conscious of whether the recorded event is from the logon source or the logon destination.
 
@@ -156,7 +156,7 @@ For logon failures in event ID 4625, the [logon error code](https://www.software
 ### Kerberos / NTLM
 
 On the DC, look at which account tried to authenticate to which service.  
-For single-device cases like abnormal-event incidents, you basically don't need to look.
+For single-host incidents (e.g., a suspected anomaly on one box), you basically don't need to look.
 
 - Security.evtx
     - [4768](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4768): A Kerberos authentication ticket (TGT) was requested
@@ -525,7 +525,7 @@ Reference: [Tokushima Prefecture Tsurugi-cho Handa Hospital Computer Virus Incid
 
 [Event Viewer](https://learn.microsoft.com/en-us/shows/inside/event-viewer)
 
-If you're a field SE or device administrator and you're told to look at the logs first and check whether there might be an intrusion, start here.
+If you're a field engineer or device administrator and you're told to look at the logs first and check whether there might be an intrusion, start here.
 
 Use the Windows built-in Event Viewer.  
 You can search and filter in the GUI, so it's plenty usable for an initial check.
@@ -537,8 +537,8 @@ From the investigator's side, they have to start by reshaping that garbage CSV i
 
 Example of a baffling CSV file exported from Event Viewer
 
-If you're collecting data with fast forensics in mind, you can use something like [CDIR-Collector](https://github.com/CyberDefenseInstitute/CDIR). Click the `exe` a few times and you can grab the major data in one go.  
-However, if you hand it to an overseas security vendor, they might go "what's that?", so ask which tool to collect with. Maybe [CyLR](https://github.com/orlikoski/CyLR), [KAPE](https://www.kroll.com/en/services/cyber/incident-response-recovery/kroll-artifact-parser-and-extractor-kape), [Velociraptor](https://github.com/Velocidex/velociraptor) or so..
+If you're collecting data with fast forensics in mind, you can use something like [CyLR](https://github.com/orlikoski/CyLR). Click the `exe` a few times and you can grab the major data in one go.  
+However, if you hand it to an overseas security vendor, they might go "what's that?", so ask which tool to collect with. Maybe [KAPE](https://www.kroll.com/en/services/cyber/incident-response-recovery/kroll-artifact-parser-and-extractor-kape), [Velociraptor](https://github.com/Velocidex/velociraptor) or something.
 
 If you're manually doing one or two files, Event Viewer's "Save All Events As" is fine, or you can export with `wevtutil epl`.  
 
@@ -578,7 +578,7 @@ Below is my personal recommendation order.
 | Analysis / Shaping Tool                | Overview                                    | Notes                                   |
 | ----------------------- | ------------------------------------- | ------------------------------------ |
 | [Timeline Explorer](https://www.sans.org/tools/timeline-explorer)       | A tool for viewing CSV etc. in timeline format. Strong at filtering and grouping. | One of [Eric Zimmerman](https://www.sans.org/profiles/eric-zimmerman)'s tools. Basically the one to use for a quick look, but saving/loading project files is weak. |
-| [Quilter-CSV](https://github.com/sumeshi/qsv-rs) | CSV filter / conversion tool.            | Originally used [xsv](https://github.com/burntsushi/xsv), but it didn't scratch where it itched, so I made this.                       |
+| [Quilter-CSV](https://github.com/sumeshi/qsv-rs) | CSV filter / conversion tool.            | Originally used [xsv](https://github.com/burntsushi/xsv), but it didn't quite scratch the itch, so I made this.                       |
 | [LibreOffice Calc](https://ja.libreoffice.org/)        | Open-source spreadsheet software.| Usable even where there's no Excel. Huge CSVs are a bit tough, huh.        |
 | Excel                   | Spreadsheet software from Microsoft. Everyone knows it.| Paid. Lots of users, but it can't load huge logs and auto-converts times to numbers. I will smack you. |
 | Elasticsearch + Kibana  | Search engine / visualization tool. Efficiently analyzes super-large logs.   | Strong at log indexing and cross-search. The query language is a rookie-killer.                 |
@@ -597,7 +597,7 @@ That said, false positives can't be prevented, so don't swallow the results whol
 | Hunting Tool| Overview| Notes|
 | - | - | - |
 | [Zircolite](https://github.com/wagga40/Zircolite)  | A tool that scans event logs with [Sigma](https://github.com/SigmaHQ/sigma) rules and detects. | The pioneer of this kind of tool, I think. (Sorry if I'm wrong.) |
-| [Chainsaw](https://github.com/WithSecureLabs/chainsaw)  | Same as above. Insanely fast. | Seems pretty used overseas. |
+| [Chainsaw](https://github.com/WithSecureLabs/chainsaw)  | Same as above. Insanely fast. | Seems fairly popular overseas. |
 | [Hayabusa](https://github.com/Yamato-Security/hayabusa) | Same as above. Super high-function. | The famed Yamato Security product. Docs are abundant and easy to use. The commit frequency is insane. |
 
 #### Parsing with EvtxEcmd
@@ -617,7 +617,7 @@ Convert with file spec `-f` or folder spec `-d`. With a folder spec, the `.evtx`
 <img width="1257" height="761" alt="image" src="https://github.com/user-attachments/assets/03952f18-8d18-4cde-bb75-cf68ca3b0239" />
 
 You can filter with conditions like `Event Id = 4624`, click columns to sort, group, and do almost anything you can think of.  
-You can't automate it, but for a "let's just look at a bunch of stuff~" moment, this alone is fine.
+You can't automate it, but for a "let's just look at a bunch of stuff" moment, this alone is fine.
 
 
 #### Filtering with Quilter-CSV
