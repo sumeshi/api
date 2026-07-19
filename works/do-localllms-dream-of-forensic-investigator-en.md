@@ -28,8 +28,6 @@ Except for your **AI friends**.
 
 ## About FORENSIA
 
-![](https://gist.githubusercontent.com/sumeshi/c2f430d352ae763273faadf9616a29e5/raw/afaaa9317a3170fc22b17e0a833632b0018acd12/forensia.svg)
-
 Out of this background, I built [FORENSIA](https://github.com/sumeshi/forensia).
 
 It ingests artifacts already extracted from the machines under investigation, then automatically generates and verifies investigative hypotheses using a local LLM, continuously updating a report as it goes.
