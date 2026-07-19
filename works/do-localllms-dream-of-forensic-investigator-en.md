@@ -286,6 +286,10 @@ I went back and forth on this quite a bit, from the standpoint of loose coupling
 At the moment, gemma-4 is remarkably good for running on a cheap PC, yet whether its Tool Calling is stable enough to rely on is highly questionable.
 And having to revisit the logic every time someone says "a better model came out, we're switching" or "our hardware runs Kimi-K3 just fine" felt like it would defeat the purpose.
 
+### Why No Self-Improvement Feature
+
+It would be nice to store mistaken contexts and reasoning and put them to use in later inference, like [Hermes Agent](https://github.com/nousresearch/hermes-agent) does — but that was beyond what a feeble model can manage. If anything it becomes a source of hallucinations, so if I ever add it, it will probably be optional.
+
 
 ## Future Directions
 
