@@ -1,6 +1,9 @@
 # Do Local LLMs Dream of Forensic Investigators?
 On the design philosophy behind FORENSIA, an AI digital forensics harness.
 
+Related Slide(Speaker Deck)
+[FORENSIA: Local LLM Forensic Harness](https://speakerdeck.com/sumeshi/forensia-local-llm-forensic-harness)
+
 ## Introduction
 
 Strangely enough, requests to investigate security incidents **tend to arrive on Fridays** (or right before long holidays).

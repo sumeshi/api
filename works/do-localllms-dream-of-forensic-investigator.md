@@ -1,6 +1,9 @@
 # ローカルLLMはフォレンジック調査官の夢を見るか？
 AIデジタルフォレンジックハーネス「FORENSIA」の設計思想について。
 
+関連スライド(Speaker Deck)
+[FORENSIA: ローカルLLMフォレンジックハーネス](https://speakerdeck.com/sumeshi/forensia-rokarullmhuorenzitukuhanesu)
+
 ## はじめに
 
 不思議なことに、セキュリティインシデントの調査依頼というものは **よく金曜日にやってきます** （あるいは長期休みの前に）。
