@@ -82,6 +82,7 @@ Windowsイベントログ調査をするときの日本語ドキュメント的�
 
 大和セキュリティによる、[DFIRと脅威ハンティングのためのWindowsイベントログ設定のガイド](https://github.com/Yamato-Security/EnableWindowsLogSettings/blob/main/README-Japanese.md) などを見ても良い。[Sigma](https://github.com/sigmahq/sigma) をもとに、デフォルトのイベントログ設定がどうなっているかなどに言及がある。可能なら元の [Sigma](https://github.com/sigmahq/sigma) ルール定義を見ればよいが、大量にありすぎてとても覚えられるものではない。
 
+2026/08/22 追記: https://detection.wiki/ こういうのもあるらしい。Windowsイベントログを含む多くのログのカタログ。これで検索してもいいかもね。
 
 ## ログの解析と仮説の立案
 
