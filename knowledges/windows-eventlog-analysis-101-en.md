@@ -86,6 +86,7 @@ If you know the tools or techniques used, it's good to look for traces while ref
 
 You can also look at Yamato Security's [Guide to Windows Event Log Settings for DFIR and Threat Hunting](https://github.com/Yamato-Security/EnableWindowsLogSettings/blob/main/README.md). It references [Sigma](https://github.com/sigmahq/sigma) and discusses what the default event log settings look like. If possible, look at the original [Sigma](https://github.com/sigmahq/sigma) rule definitions, but there are so many you couldn't possibly memorize them.
 
+Update (Aug 22, 2026): Apparently, there's also something like https://detection.wiki/ . It's a catalog of many logs, including Windows Event Logs. You might want to try searching here.
 
 ## Log Analysis and Hypothesis Building
 
