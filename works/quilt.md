@@ -5,7 +5,7 @@
 
 ![quilt-logo](https://github.com/user-attachments/assets/06953756-430c-49d3-98bd-11c4b16c8bea)
 
-機器の障害や侵害の調査を行う際など、単発でログを読みたいなというケースは割とあります。  
+機器の障害や侵害の調査を行う際など、**単発でログを読みたいな**というケースは割とあります。  
 grepやcut, awkなどの標準コマンドで一生懸命加工してもかまわないのですが、実際やってみるとフォーマット崩れや整形ミスが起きることもしばしば。
 
 もちろん、CSVやJSONを加工するツールは無数にありますが、これ！というのがなく、結局Pythonでスクリプトを書いたりすることが多かったのです。
@@ -41,7 +41,7 @@ $ cut -d, -f 3,10,14,15,17 eventlog.csv
 
 じゃあ、こんな表が欲しいときは？
 
-| 時刻(JST)                       | ログオン先                         | ユーザ名 | ログオン元                     | ログオンタイプ |
+| 時刻(JST)                       | ログオン元                         | ユーザ名 | ログオン先                     | ログオンタイプ |
 | ----------------------------- | ----------------------------- | ---- | ------------------------- | ------- |
 | 2016-10-06 10:47:21.955197200 | WIN-WFBHIBE5GXZ.example.co.jp | -\-  | fe80::4888:72d0:4f06:d1a1 | 3       |
 | 2016-10-06 10:47:21.955197200 | WIN-WFBHIBE5GXZ.example.co.jp | -\-  | ::1                       | 3       |
@@ -58,7 +58,7 @@ $ cut -d, -f 3,10,14,15,17 eventlog.csv
 sedやらawkやらなにやらで一生懸命加工してもいいですが、結果が本当にあっているのか不安です（大体はイレギュラーな値を含む行から先が壊れている）。  
 じゃあExcelなりなんなりのGUIツールでやればいいかもしれませんが、それを100個とか1,000個とかやるのはつらい。非常に。
 
-それで気づいたのですが、私がやりたいのって抽出・フィルタ・整形だけじゃなく、加工もなんですよね。
+それで気づいたのですが、私がやりたいのって抽出・フィルタ・整形だけじゃなく、**加工も**なんですよね。
 調査の途中で思いついた処理をガチャガチャつなげて、最後は人間が読みやすい形で出してほしい。
 
 でもそこまでできるツールってあんまりないなぁと思いました。
@@ -67,7 +67,7 @@ sedやらawkやらなにやらで一生懸命加工してもいいですが、�
 ## Quilt
 
 そこで、ログ解析に使ういろんなデータ処理をつなげて実行できるようにしたのが [Quilt](https://github.com/sumeshi/quilt) です。
-基本構文は次のとおりです。
+基本構文は次のとおり。
 
 ```bash
 $ qlt {INITIALIZER} - {CHAINABLE} - {FINALIZER}
@@ -94,15 +94,15 @@ $ qlt load eventlog.csv - select TimeCreated,Computer,UserName - showtable
 
 ```bash
 $ qlt load eventlog.csv \
+  - select TimeCreated,Computer,UserName,RemoteHost,PayloadData2 \
   - changetz TimeCreated --from-tz UTC --to-tz Asia/Tokyo --output-format '%Y-%m-%d %H:%M:%S.%f' \
-  - sed '^LogonType ' '' --column PayloadData2 \
   - sed '^[[:space:]]*\(' '' --column RemoteHost \
   - sed '\)[[:space:]]*$' '' --column RemoteHost \
-  - select TimeCreated,Computer,UserName,RemoteHost,PayloadData2 \
+  - sed '^LogonType ' '' --column PayloadData2 \
   - renamecol TimeCreated "時刻(JST)" \
-  - renamecol Computer "ログオン先" \
+  - renamecol Computer "ログオン元" \
   - renamecol UserName "ユーザ名" \
-  - renamecol RemoteHost "ログオン元" \
+  - renamecol RemoteHost "ログオン先" \
   - renamecol PayloadData2 "ログオンタイプ" \
   - showtable
 ```
@@ -110,20 +110,20 @@ $ qlt load eventlog.csv \
 ちょっと長いですが、見ての通り
 
 - `eventlog.csv` をロードする
-- `TimeCreated` 列の日時を `UTC` から `Asia/Tokyo` に変換する
-- `PayloadData2` 列から `LogonType ` という文字列を取り除く
-- `RemoteHost` 列の先頭と末尾に付いている括弧を取り除く
 - 調査に必要な列だけを選択する
+- `TimeCreated` 列の日時を `UTC` から `Asia/Tokyo` に変換する
+- `RemoteHost` 列の先頭と末尾に付いている括弧を取り除く
+- `PayloadData2` 列から `LogonType ` という文字列を取り除く
 - 各列を分かりやすい日本語の名前に変更する
 - 最後に表形式で表示する
 
 という処理を、上から順番に実行しています。
 
-UNIXのパイプと似ていますが、それぞれの処理結果を逐次受け渡しているわけではありません。  
+`-` の役割はUNIXのパイプと似ていますが、それぞれの処理結果を逐次受け渡しているわけではありません。  
 Quiltでは処理を遅延評価として組み立て、最後にまとめて実行します。
 
-これは、数十GBを超えるようなログでも、不要な列の読み込みや中間データの生成をなるべく減らすためです。  
-ただし、sortのようにデータ全体を見る必要がある処理は例外です（なので処理の後ろに書くほうがよい）。
+数十GBを超えるようなログでも、不要な列の読み込みや中間データの生成をなるべく減らすためです。  
+ただし、sortのようにデータ全体を見る必要がある処理は例外です（なのでなるべく処理の後ろに書くほうがよい）。
 
 
 ### RUN
@@ -138,16 +138,19 @@ stages:
     steps:
       - load: {}
 
+      - select:
+          columns:
+            - TimeCreated
+            - Computer
+            - UserName
+            - RemoteHost
+            - PayloadData2
+
       - changetz:
           column: TimeCreated
           from-tz: UTC
           to-tz: Asia/Tokyo
           output-format: "%Y-%m-%d %H:%M:%S.%f"
-
-      - sed:
-          pattern: '^LogonType '
-          replacement: ''
-          column: PayloadData2
 
       - sed:
           pattern: '^[[:space:]]*\('
@@ -159,13 +162,10 @@ stages:
           replacement: ''
           column: RemoteHost
 
-      - select:
-          columns:
-            - TimeCreated
-            - Computer
-            - UserName
-            - RemoteHost
-            - PayloadData2
+      - sed:
+          pattern: '^LogonType '
+          replacement: ''
+          column: PayloadData2
 
       - renamecol:
           old: TimeCreated
@@ -173,7 +173,7 @@ stages:
 
       - renamecol:
           old: Computer
-          new: "ログオン先"
+          new: "ログオン元"
 
       - renamecol:
           old: UserName
@@ -181,7 +181,7 @@ stages:
 
       - renamecol:
           old: RemoteHost
-          new: "ログオン元"
+          new: "ログオン先"
 
       - renamecol:
           old: PayloadData2
@@ -191,7 +191,7 @@ stages:
 ```
 
 Quiltでは、CLIで使っている処理をほぼそのままYAMLのワークフローへ移せます。  
-そのため、調査中はワンライナーで試行錯誤、手順が固まったら再利用可能な処理として残す、という使い方ができます。もちろんgit管理したっていい。
+そのため、**調査中はワンライナーで試行錯誤、手順が固まったら再利用可能な処理として残す**、という使い方ができます。もちろんgit管理したっていい。
 
 ```bash
 $ qlt run extract-logons.yaml eventlogs.csv
@@ -450,10 +450,10 @@ $ qlt load Security.csv \
 
 ## おわりに
 
-フォレンジックやマルウェア解析では、用途ごとにさまざまなツールを使います。EVTXを読むならEvtxECmd、別の証跡ならまた別のパーサ、といった具合です。
-Quiltはそれらすべてを置き換えたいのではなく、さまざまなツールが出力するCSVやJSONLに対して小さな処理を組み合わせて、調査者が見たい形へ持っていくことが目的です。
+フォレンジックやマルウェア解析では、用途ごとにさまざまなツールを使い分けます。EVTXをパースするならEvtxECmd、文字列の抽出ならほげほげ、検索ならふがふが...といった具合です。  
+Quiltは、そういったさまざまなツールの共通出力フォーマットであるCSVやJSONLに対して小さな処理を組み合わせて、調査者が見たい形へ持っていくことが目的です。場合によってはその出力をまた別のツールに食わせたりすることもあるでしょう。
 
-[Quilt](https://github.com/sumeshi/quilt) という名前も、そういう小さな処理を継ぎ接ぎしていくイメージから付けています。
-ログ解析はパッチワークや！
+[Quilt](https://github.com/sumeshi/quilt) という名前も、そういう小さな処理を継ぎ接ぎしていくイメージから付けています（& 好きな曲名から借用）。
+**ログ解析はパッチワークや！**
 
 おわり
