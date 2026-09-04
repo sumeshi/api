@@ -24,6 +24,8 @@ Ornith-1.5 は Qwen3.5 をベースに追加学習されたモデルなので、
 私と同じようなことを考える人は山ほどいるわけで、AIにアーティファクトを食わせてレポート生成まで一気通貫！というのをちょこちょこ見かけます。どちらかといえば、マネージドの 卍最強モデル卍 をガンガン使って、精度の高い結果を得ようとするほうが多いかな。
 
 もちろんそれもすごく面白いのですが、やっぱり機密性やデータの取り扱いを考えるとローカルに魅力を感じてしまいます。
+
+![localllm](https://github.com/user-attachments/assets/fe3a24b7-caf2-46af-8240-7225507748f4)
 > [FORENSIA: ローカルLLMフォレンジックハーネス](https://speakerdeck.com/sumeshi/forensia-rokarullmhuorenzitukuhanesu?slide=3)
 
 かといって、固定資産扱いにならない価格帯の機器では、ローカルLLMに調査そのものを任せられない。
@@ -318,6 +320,8 @@ Use `-` when a value cannot be determined.
 
 
 #### 結果
+
+![lepisma](https://github.com/user-attachments/assets/5b8eb8ac-d8b0-44f7-8d22-c6e38249356c)
 
 これだけでもまぁまぁ形になっています。Skillの呼び出しも適宜LLM側で判断して使えているみたい。  
 
