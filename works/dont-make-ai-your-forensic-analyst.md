@@ -145,7 +145,7 @@ lepisma/
 セッション中は常時ロードされる。  
 プロジェクトの全体方針などを書く。
 
-```
+```.md
 # Lepisma
 
 あなたはデジタルフォレンジック調査を支援するアシスタントです。
@@ -208,7 +208,7 @@ Lepismaは、分析者から与えられた起点をもとに証拠を探し、�
 
 #### lepisma-search/SKILL.md
 
-```
+```.yaml
 ---
 name: lepisma-search
 description: Search source files for evidence related to analyst-provided investigation anchors.
@@ -227,7 +227,7 @@ Do not infer or invent information that cannot be verified from the evidence.
 
 #### lepisma-summarize/SKILL.md
 
-```
+```.yaml
 ---
 name: lepisma-summarize
 description: Summarize an evidence record into a short and objective timeline entry.
@@ -244,7 +244,7 @@ Do not include speculation, interpretation, or evaluation.
 
 #### lepisma-tag/SKILL.md
 
-```
+```.yaml
 ---
 name: lepisma-tag
 description: Assign consistent event types and tags to timeline events.
@@ -267,7 +267,7 @@ Use `tags` to provide keywords that help identify, search, and correlate related
 
 #### lepisma-timeline/SKILL.md
 
-```
+```.yaml
 ---
 name: lepisma-timeline
 description: Search evidence and update the forensic timeline based on analyst-provided information.
