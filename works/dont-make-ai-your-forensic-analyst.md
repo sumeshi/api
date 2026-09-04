@@ -322,7 +322,7 @@ Use `-` when a value cannot be determined.
 
 #### 結果
 
-![lepisma](https://github.com/user-attachments/assets/5b8eb8ac-d8b0-44f7-8d22-c6e38249356c)
+![lepisma](https://github.com/user-attachments/assets/4be92d50-3e35-4352-9037-ae2a05687bd6)
 
 これだけでもまぁまぁ形になっています。Skillの呼び出しも適宜LLM側で判断して使えているみたい。  
 
