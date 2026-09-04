@@ -14,7 +14,7 @@ AI-assisted Forensic Scribing という考え方と、その実装について�
 
 個人的に衝撃を受けたのは、[Ornith-1.5](https://ornith.ai/ornith_1_5.html)です。9B版でも軽快に動き、長時間走らせても思考が循環したり、考えが無限に発散したりすることなく、ひたすら働き続けてくれます。そういった意味で、エージェント性能が非常に高いと感じています。
 
-Ornith-1.5 は Qwen3.5 をベースに追加学習されたモデルなので、言語性能や知識についてはピュアな Gemma 4 ほど優秀ではないのですが、そういった点についてはそもそもローカルLLMに期待していません。というか期待してはいけません。
+Ornith-1.5 9B は Qwen3.5 系をベースに追加学習されたモデルなので、言語性能や知識についてはピュアな Gemma 4 ほど優秀ではないのですが、そういった点についてはそもそもローカルLLMに期待していません。というか期待してはいけません。
 
 必要なのは、必要な情報と指示を与えればちゃんとそのとおり動いてくれること。これだけ。
 
@@ -51,7 +51,7 @@ Ornith-1.5 は Qwen3.5 をベースに追加学習されたモデルなので、
 > 「ファイアウォールログを見るとその付近で外部通信が発生している」  
 
 こんなふうに、人間様は見つけた事実をAIにポンポンなげるだけ。  
-AIは関連する証拠を探し、証拠への参照付きでまとめる形の分業がいいんじゃないかなって。
+AIは関連するソースレコードを探し、その参照付きでまとめる形の分業がいいんじゃないかなって。
 
 完全にHuman-in-the-Loopを前提としたローカルLLMの運用をするということですね。  
 これを、**AI-assisted Forensic Scribing** (AI支援型フォレンジック書記) と呼ぼうと思います。
@@ -65,7 +65,7 @@ AIは関連する証拠を探し、証拠への参照付きでまとめる形の
 既存のハーネスに組み込まれているループの仕組みに乗っかり、ウワモノを乗せてあげれば十分です。
 
 ベースは [Pi Coding Agent](https://pi.dev/) にしました。  
-これはミニマルな Harness で、デフォルトでは `read` `write` `edit` `bash` の機能しかありません。でも、そのミニマルさがイイ！となってオレオレハーネスを作っている層が一定いるとか。カレーをスパイスから作るタイプかもね。ぼくはそう。
+これはミニマルなハーネスで、デフォルトでは `read` `write` `edit` `bash` の機能しかありません。でも、そのミニマルさがイイ！となってオレオレハーネスを作っている層が一定いるとか。カレーをスパイスから作るタイプかもね。ぼくはそう。
 
 
 ## 実際に作ってみる
@@ -153,10 +153,10 @@ lepisma/
 調査の主体は分析者であり、自律的に調査方針を決定しない。
 分析者から与えられた情報を調査の起点として扱い、必要に応じて以下のSkillを利用する。
 
-* `lepisma-search`: 関連する証拠レコードを検索する
-* `lepisma-summarize`: 証拠レコードを簡潔かつ客観的に要約する
+* `lepisma-search`: 関連するソースレコードを検索する
+* `lepisma-summarize`: ソースレコードを簡潔かつ客観的に要約する
 * `lepisma-tag`: イベントに一貫した `event_type` と `tags` を付与する
-* `lepisma-timeline`: 証拠を確認し、`timeline.csv` を更新する
+* `lepisma-timeline`: ソースレコードを確認し、`timeline.csv` を更新する
 
 ## 基本方針
 
@@ -166,7 +166,7 @@ lepisma/
 
 分析者の発言だけを根拠として、確認できていない内容を事実として記録しない。
 
-証拠に存在しない情報を推測して補完しない。
+ソースレコードに存在しない情報を推測して補完しない。
 
 明示的に依頼されていない方向へ調査を広げない。
 
@@ -182,11 +182,11 @@ lepisma/
 
 表記違いだけの分類やタグを新しく作らない。
 
-元の証拠を確認できるよう、`source_record` と `source_file` を保持する。
+判断の根拠を確認できるよう、`source_record` と `source_file` を保持する。
 
 ## sources/
 
-`sources/` 配下のファイルは証拠または解析結果として扱う。
+`sources/` 配下のファイルは、原証拠から抽出またはパースした解析用のソースデータとして扱う。原証拠そのものと同一視しない。
 
 原則として内容を変更しない。
 
@@ -196,9 +196,9 @@ lepisma/
 
 分析者は、何を見るか、何が重要か、次にどこを調査するかを決める。
 
-Lepismaは、分析者から与えられた起点をもとに証拠を探し、確認し、要約し、分類し、時系列として整理する。
+Lepismaは、分析者から与えられた起点をもとにソースレコードを探し、確認し、要約し、分類し、時系列として整理する。
 
-調査官として振る舞うのではなく、分析者の調査を記録・整理する補助者として振る舞う。
+自律的に調査する主体ではなく、人間の分析者による調査を記録・整理する補助者として振る舞う。
 ```
 
 ### SKILL.md
@@ -211,7 +211,7 @@ Lepismaは、分析者から与えられた起点をもとに証拠を探し、�
 ```.yaml
 ---
 name: lepisma-search
-description: Search source files for evidence related to analyst-provided investigation anchors.
+description: Search source files for records related to analyst-provided investigation anchors.
 ---
 
 Use analyst-provided timestamps, IP addresses, hostnames, usernames, process names, filenames, and other identifiers as search anchors.
@@ -220,9 +220,9 @@ Search relevant records under `sources/`.
 
 Also search for keywords directly derived from the analyst-provided information to reduce missed relevant records.
 
-For each result, preserve the complete original record and its source file.
+For each result, preserve the complete source record and its source file.
 
-Do not infer or invent information that cannot be verified from the evidence.
+Do not infer or invent information that cannot be verified from the source data.
 ```
 
 #### lepisma-summarize/SKILL.md
@@ -230,14 +230,14 @@ Do not infer or invent information that cannot be verified from the evidence.
 ```.yaml
 ---
 name: lepisma-summarize
-description: Summarize an evidence record into a short and objective timeline entry.
+description: Summarize a source record into a short and objective timeline entry.
 ---
 
-Summarize the provided evidence record in approximately 50 characters or a similarly concise length.
+Summarize the provided source record in approximately 50 characters or a similarly concise length.
 
 The summary must allow a human reader to quickly understand what happened.
 
-Do not add information that does not exist in the original record.
+Do not add information that does not exist in the source record.
 
 Do not include speculation, interpretation, or evaluation.
 ```
@@ -270,10 +270,10 @@ Use `tags` to provide keywords that help identify, search, and correlate related
 ```.yaml
 ---
 name: lepisma-timeline
-description: Search evidence and update the forensic timeline based on analyst-provided information.
+description: Search source records and update the investigation timeline based on analyst-provided information.
 ---
 
-Use the `lepisma-search` skill to search for evidence related to the information provided by the analyst.
+Use the `lepisma-search` skill to search for source records related to the information provided by the analyst.
 
 Use the search results to update `timeline.csv`.
 
@@ -285,8 +285,8 @@ Use the following columns:
 - `timestamp_utc`: Timestamp normalized to UTC (`UTC+00:00`).
 - `event_type`: Event classification such as `Logon`, `Logoff`, or `UserAdd`. Use the `lepisma-tag` skill.
 - `summary`: Short and objective description of the event. Use the `lepisma-summarize` skill.
-- `source_record`: Complete original record used as evidence.
-- `source_file`: Source file containing the original record.
+- `source_record`: Complete source record used to support this timeline entry.
+- `source_file`: Source file containing the source record.
 - `note`: Additional notes or analyst-provided context.
 - `tags`: Keywords used to search and correlate related events. Use the `lepisma-tag` skill.
 
@@ -299,13 +299,14 @@ Use `-` when a value cannot be determined.
 
 #### sources
 
-調査元データをおいておきます。テキストがいいかな。  
+調査用のソースデータをおいておきます。テキストがいいかな。
+
 検証にあたっては、[CFReDS - Data Leakage Case](https://cfreds-archive.nist.gov/data_leakage_case/data-leakage-case.html) のイベントログを [EvtxECmd](https://github.com/EricZimmerman/evtx) でパースして置いておきました。
 
 
 #### timeline.csv
 
-まとめ先のスーパータイムライン。カラムは適当。
+まとめ先の調査タイムライン。カラムは適当。
 
 | カラム名            | 概要                                                  |
 | --------------- | --------------------------------------------------- |
@@ -313,8 +314,8 @@ Use `-` when a value cannot be determined.
 | `timestamp_utc` | UTC（UTC+00:00）に正規化したタイムスタンプ                         |
 | `event_type`    | イベントの分類。`Logon`、`Logoff`、`UserAdd` など、内容に応じて任意に設定する |
 | `summary`       | イベントの内容を簡潔にまとめた説明                                   |
-| `source_record` | 判断の根拠となった元ログの内容                                     |
-| `source_file`   | 元データが格納されているソースファイル                                 |
+| `source_record` | 判断の根拠となった完全なソースレコード                                 |
+| `source_file`   | ソースレコードが格納されているファイル                                 |
 | `note`          | 補足事項や分析者のメモ                                         |
 | `tags`          | 後から関連イベントを検索・関連付けするためのタグ                            |
 
