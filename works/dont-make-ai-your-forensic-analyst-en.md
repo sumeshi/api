@@ -1,5 +1,5 @@
 # Don't Make AI Your Forensic Analyst
-On the idea of **AI-assisted Forensic Scribing**, and one way to implement it.
+On the idea of AI-assisted Forensic Scribing, and one way to implement it.
 
 ## Introduction
 
