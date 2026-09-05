@@ -3,11 +3,15 @@ On the idea of **AI-assisted Forensic Scribing**, and one way to implement it.
 
 ## Introduction
 
-A while ago, I wrote an article titled [Do Local LLMs Dream of Becoming Forensic Investigators?](https://sumeshi.github.io/posts/works/do-localllms-dream-of-forensic-investigator-en). It was about [FORENSIA](https://github.com/sumeshi/forensia), a project I built to let AI conduct forensic investigations autonomously. FORENSIA ingests different forensic artifacts into a unified format, uses rules to generate investigation starting points, creates hypotheses, checks them against actual evidence, and feeds the results back into the next round of hypothesis generation and report generation. In other words, it is a harness built around an investigation loop.
+A while ago, I wrote an article titled [Do Local LLMs Dream of Becoming Forensic Investigators?](https://sumeshi.github.io/posts/works/do-localllms-dream-of-forensic-investigator-en). It was about [FORENSIA](https://github.com/sumeshi/forensia), a project I built to let AI conduct forensic investigations autonomously.
+
+FORENSIA ingests different forensic artifacts into a unified format, uses rules to generate investigation starting points, generates hypotheses, checks them against actual evidence, and feeds the results into subsequent hypothesis and report generation. In other words, it is a harness built around an investigation loop.
 
 The basic architecture was simple in principle: **Do not let the LLM handle everything. Break work into small tasks and give the LLM only the parts it actually needs to do. Anything that does not require an LLM should be handled mechanically.**
 
-Why did I build it this way? Back around April 2026, there simply were not many strong LLMs that could run locally. At best, the newly released [Gemma 4](https://deepmind.google/models/gemma/gemma-4/) — released on March 31, 2026 — was just barely reaching the point where I felt it might be usable. So I ended up exploring what could be done with what I like to call a **poor man's LLM strategy**: making the most of limited hardware. In fact, I run it on a used GPU that cost me around USD 150.
+Why did I build it this way? Back around April 2026, there simply were not many strong LLMs that could run locally. At best, the newly released [Gemma 4](https://deepmind.google/models/gemma/gemma-4/) — released on March 31, 2026 — was just barely reaching the point where I felt it might be usable.
+
+So I ended up exploring what could be done with what I like to call a **poor man's LLM strategy**: making the most of limited hardware. In fact, I run it on a used GPU that cost me around USD 150.
 
 I still think the original idea behind FORENSIA is interesting, but I also built it more as a PoC chasing a dream than as something I expected to immediately use in real investigations. Recently, though, I feel like local LLMs have clearly entered a different stage.
 
@@ -15,7 +19,7 @@ The model that personally surprised me the most was [Ornith-1.5](https://ornith.
 
 [Ornith-1.5](https://ornith.ai/ornith_1_5.html) 9B is based on the Qwen3.5 family with additional training, so its language ability and general knowledge are not as strong as vanilla [Gemma 4](https://deepmind.google/models/gemma/gemma-4/). But honestly, I do not expect those things from a local LLM in the first place. In fact, I probably should not.
 
-What I need is much simpler: **Give it the necessary information and instructions, and have it reliably do what I asked.** That is enough.
+What I need is much simpler: **Give it the necessary information and instructions, and have it reliably do what I ask.** That is enough.
 
 ## The Problem with Making AI Do Forensics
 
@@ -27,9 +31,9 @@ Most of them, however, tend to use the **WORLD'S STRONGEST MODEL** from a manage
 
 > [FORENSIA: Local LLM Forensic Harness](https://speakerdeck.com/sumeshi/forensia-local-llm-forensic-harness?slide=3)
 
-The problem is that on hardware an individual can realistically afford, local LLMs still are not at the point where I want to hand the entire forensic investigation over to them. I was thinking about what to do with that limitation when something occurred to me: **Maybe I do not need to make the AI do forensics at all.**
+The problem is that on hardware an individual can realistically afford, local LLMs are still not at the point where I want to hand the entire forensic investigation over to them. I was thinking about what to do with that limitation when something occurred to me: **Maybe I do not need to make the AI do forensics at all.**
 
-Because the truly painful part of forensic work is not always the investigation itself. It is continuously organizing everything into a consistent representation that lets you understand the incident as a whole.
+The truly painful part of forensic work is not always the investigation itself. It is continuously organizing everything into a consistent representation that lets you understand the incident as a whole.
 
 During an investigation, you look at all kinds of artifacts and logs. There are countless tools for parsing them, and every artifact exposes different information at a different level of granularity. Of course, there are analysis products bundled with EDR platforms, as well as integrated forensic suites. But even then, you eventually have to incorporate things like:
 
@@ -53,7 +57,7 @@ For example, I might discover things like:
 > "PowerShell ran immediately afterward."<br>
 > "The firewall log also shows outbound traffic around the same time."
 
-The human analyst can simply send observations like these to the AI as they discover them. The AI then searches for the relevant source records and organizes them while keeping references back to the original data. That kind of division of labor sounds much more useful to me.
+The human analyst can simply send observations like these to the AI as they discover them. The AI then searches for the relevant source records and organizes them while retaining references to the original data. That kind of division of labor sounds much more useful to me.
 
 This is a fully **human-in-the-loop** approach to using local LLMs. In this post, I will call this approach **AI-assisted Forensic Scribing**.
 
@@ -61,13 +65,15 @@ This is a fully **human-in-the-loop** approach to using local LLMs. In this post
 
 ## Starting My Forensic Life with Pi Coding Agent
 
-As mentioned earlier, [FORENSIA](https://github.com/sumeshi/forensia) contains quite a lot of machinery just to keep an LLM behaving reasonably inside an investigation loop. ~~Evidence normalization, investigation starting points generated by detection rules, hypothesis generation, investigation coverage management, context management, validation to avoid blindly trusting model output...~~ If you want autonomous investigation to work with even halfway decent reliability, you end up needing at least that much machinery.
+As mentioned earlier, [FORENSIA](https://github.com/sumeshi/forensia) contains quite a lot of machinery just to keep an LLM behaving reasonably inside an investigation loop.
+
+~~Evidence normalization, investigation starting points generated by detection rules, hypothesis generation, investigation coverage management, context management, validation to avoid blindly trusting model output...~~ If you want autonomous investigation to work with even halfway decent reliability, you end up needing at least that much machinery.
 
 But with this new idea, we can start much more casually. Instead of building another investigation loop, we can reuse the loop that already exists in a coding-agent harness and simply add the domain-specific layers on top — a bit like adding the synths and melodic parts over an existing rhythm section.
 
-I chose [Pi Coding Agent](https://pi.dev/) as the base. Pi is a minimal coding-agent harness. By default, its core toolset is basically just: `read` `write` `edit` `bash`
+I chose [Pi Coding Agent](https://pi.dev/) as the base. Pi is a minimal coding-agent harness. By default, its core toolset is basically just: `read` `write` `edit` `bash`.
 
-And apparently there is a whole group of people who see that minimalism and immediately think: **Nice. Time to build my own harness on top of this.** The kind of person who mixes their own BBQ rub instead of buying one from the store. I understand them. I am one of them.
+And apparently there is a whole group of people who see that minimalism and immediately think: **Nice. Time to build my own harness on top of this.** They are the kind of people who mix their own BBQ rub instead of buying one from the store. I understand them. I am one of them.
 
 ## Let's Actually Build It
 
@@ -308,7 +314,7 @@ This is where I put the source data used during the investigation. Plain text wo
 
 #### timeline.csv
 
-This is the destination for the investigation timeline. For this prototype, I intentionally kept the schema small.
+This is where the investigation timeline is stored. For this prototype, I intentionally kept the schema small.
 
 | Column          | Description                                                            |
 | --------------- | ---------------------------------------------------------------------- |
@@ -333,9 +339,9 @@ Ideally, I would also like to keep dropping findings into it as I discover them 
 
 ## Conclusion
 
-During forensic work, I rarely max out the machine with analysis software alone. There is usually some compute sitting idle. And computers are meant to be used.
+During forensic work, I rarely max out the machine with analysis software alone. There is usually some compute sitting idle, and computers are meant to be used.
 
-So maybe a loose workflow like this is good enough: **I keep investigating, while I throw all the annoying organizational work at the AI running beside me.** That feels like a perfectly reasonable way to use local AI.
+So maybe a loose workflow like this is good enough: **I keep investigating while I throw all the annoying organizational work at the AI running beside me.** That feels like a perfectly reasonable way to use local AI.
 
 Right, Hamtaro?
 
