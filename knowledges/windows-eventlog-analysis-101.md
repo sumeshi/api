@@ -655,7 +655,7 @@ GUIで検索やフィルタができるので、初期の確認には十分使�
 右サイドバーの `Save All Events As...` をクリックすればよい。
 
 ただし、**CSVでエクスポートしたものをCSIRTやアナリストに渡すな。マジでやめろ。**  
-調査する側からすると、ゴミみたいなCSVを使いやすいように整形するところから始める必要があり、余計な手間になる。あとかなり情報量が落ちる。調査担当に渡すなら、`.csv` ではなく `.evtx` 形式で保全したものにすること。
+調査する側からすると、ゴミみたいなCSVを使えるように整形するところから始める必要があり、余計な手間になる。そもそもかなり情報量が落ちている。調査担当に渡すなら、`.csv` ではなく `.evtx` 形式で保全したものにすること。
 
 
 以下はイベントビューアーからエクスポートしたわけのわからないCSVファイルの例。1カラムに多数の改行が含まれている。張り倒すぞ。
@@ -663,12 +663,12 @@ GUIで検索やフィルタができるので、初期の確認には十分使�
 ![yabasugi-csv](https://github.com/user-attachments/assets/1575ba11-560f-4f4f-b90e-f3a578c68d19)
 
 
-ファストフォレンジックを見越してデータ取得するなら、[CDIR-Collector](https://github.com/CyberDefenseInstitute/CDIR) あたりをつかっておけばよい。`exe` ポチポチで主要なデータはゴソッと取れる。  
+ファストフォレンジックを依頼することを見越してデータ取得するなら、[CDIR-Collector](https://github.com/CyberDefenseInstitute/CDIR) あたりをつかっておけばよい。`exe` ポチポチで主要なデータがゴソッと取れる。  
 
-ただし、このツールの知名度は国内限定なので、海外のセキュリティベンダ相手に渡すとなにそれ？ってなると思う。どのツールで取得したらよいかは相手方に聞いておこう。[CyLR](https://github.com/orlikoski/CyLR), [KAPE](https://www.kroll.com/en/services/cyber/incident-response-recovery/kroll-artifact-parser-and-extractor-kape), [Velociraptor](https://github.com/Velocidex/velociraptor) あたりを指定されるかな。。
+ただし、このツールの知名度は国内に限った話なので、海外のセキュリティベンダ相手に渡すとなにそれ？ってなると思う。どのツールで取得したらよいかは相手方に聞いておこう。[CyLR](https://github.com/orlikoski/CyLR), [KAPE](https://www.kroll.com/en/services/cyber/incident-response-recovery/kroll-artifact-parser-and-extractor-kape), [Velociraptor](https://github.com/Velocidex/velociraptor) あたりを指定されるかな。。
 
 
-保全対象ファイルの実体は `C:\Windows\System32\winevt\Logs\` 以下にあるが、直接ファイルコピーするとロックの兼ね合いで失敗することもある。可能なら正規のエクスポート手順で取得したほうが安全。
+イベントログの実体は `C:\Windows\System32\winevt\Logs\` 以下にあるが、直接ファイルコピーするとロックの兼ね合いで失敗することもある。可能なら正規のエクスポート手順で取得したほうが安全。
 
 標準コマンドでやりたいならこう。外部からツールを持ち込むのが難しい場合はこれで。
 
@@ -686,7 +686,7 @@ GUIで検索やフィルタができるので、初期の確認には十分使�
 
 **たとえあなたが逆張りオタクで人と違うツールを使うのが好きだとしても、そのツールによって証拠性が担保できるということは、あなたが説明しなければならないことを忘れてはいけない。**
 
-使ったツールが何をどうパースして、どんな形式で出力し、元ログとどう対応しているのかを説明できる必要がある。
+使ったツールが何をどうパースして、どんな形式で出力し、元ログとどう対応しているのかは把握しておきましょう。
 
 以下は個人的おすすめ順。
 
@@ -710,18 +710,18 @@ https://github.com/sumeshi/evtx2es
 | Excel                   | Microsoftが提供する表計算ソフト。みんな知ってるね。| 有償。利用者は多いが、大量ログは読み込めなかったり、勝手に時刻が数値変換されたりする。ふざけるな。 |
 | Elasticsearch + Kibana  | 検索エンジン/可視化ツール。超大量のログを効率的に分析できる。   | ログのインデックス作成と横断検索に強い。クエリは初見殺しなので生成AIと一緒に使うといいかもしれない。                 |
 | [Event Log Explorer](https://eventlogxp.com/ja/) | イベントログの閲覧と分析に特化したGUIツール。 | 商用利用は有償。SANSトレーニングでも使われている信頼のあるツールだが、あまり使いやすいとは思えない。 |
-| [TimeSketch](https://github.com/google/timesketch)  | Google製ログ分析補助ツール。GUIで怪しいやつをフラグ付けとかできる。| plasoと親和性が高い。[使ってみた](https://github.com/google/timesketch) が、マジで遅い。複数人で同時作業するとかなら良さがあるのかもしれない。 |
+| [TimeSketch](https://github.com/google/timesketch)  | Google製ログ分析補助ツール。GUIで怪しいやつをフラグ付けとかできる。| plasoと親和性が高い。[使ってみた](https://github.com/google/timesketch) が、Webアプリケーションだからかマジで遅い。複数人で同時作業するとかなら良さがあるのかもしれない。 |
 | [Log Parser Studio](https://learn.microsoft.com/ja-jp/exchange/iis-logs-and-log-parser-studio-reports-exchange-2013-help)  | Log ParserのGUIフロントエンド。   | たぶん配布停止。探せばまだあるが。           |
 | [Log Parser Lizard](https://log-parser.com/)  | Log Parser系のGUIツール。      | Log Parser Studioより高機能。でも使い方がイマイチわからない。      |
 | Splunk                  | 商用のログ管理・分析プラットフォーム。大量ログの検索・可視化に強い。    | 嫌い。                 |
 
 https://github.com/sumeshi/quilt
 
-あと上記とはちょっと毛色が違うけど **ハンティングツール？** の紹介。事前に作っておいた検知ルールでログをスキャンして怪しいイベントを引っ掛けたりすることができる。
+あと上記とはちょっと毛色が違うけど **ハンティングツール** の紹介。事前に作っておいた検知ルールでログをスキャンして怪しいイベントを引っ掛けたりすることができる。
 
 単純な抽出だけではなく加工や正規化もしているので、この結果を直接報告に使うのは難しいが、ざっとスキャンして全体像を掴み、その後で詳細分析をすると素早く怪しいポイントを見つけやすい。
 
-とはいえ FalsePositive は防げないので、結果を鵜呑みにせず、バイアスには注意すること。
+とはいえ原理的に FalsePositive は防げないので、結果を鵜呑みにしないこと。
 
 | ハンティングツール| 概要| 備考|
 | - | - | - |
@@ -731,7 +731,8 @@ https://github.com/sumeshi/quilt
 
 #### CSV で扱う
 
-人間が見るなら、フォーマットはcsvが一番取り回しやすい。grepもできるし。
+evtxファイルをバイナリのまま見るのは現実的ではない。  
+人間が見るなら、フォーマットはCSVが一番取り回しやすい。grepもできるしね。
 
 EvtxECmdがおすすめ。ファイル指定 `-f` もしくはフォルダ指定 `-d` で変換する。
 フォルダ指定すると配下の `.evtx` が1つの `.csv` に統合される。  
@@ -742,12 +743,13 @@ EvtxECmdがおすすめ。ファイル指定 `-f` もしくはフォルダ指定
 
 ![evtxecmd](https://github.com/user-attachments/assets/7b9bb6c4-e731-4c82-bb08-ad737ebee891)
 
-データのフィルタリングは Timeline Explorer がおすすめ。  
+フィルタリングは Timeline Explorer がおすすめ。  
 
 ![timelineexplorer](https://github.com/user-attachments/assets/03952f18-8d18-4cde-bb75-cf68ca3b0239)
 
 `Event Id = 4624` のように条件式でフィルタをかけたり、カラムをクリックしてソートしたり、グルーピングしたり、思いつくほとんどのことはできる。  
-ただし、各種フィルタなどが保存できない（バグ？）ので注意。自動化も難しいが、とりあえずざっくり見てみるべ～のときはこれでいい。
+ただし、フィルタや条件式などが保存できない（バグ？）ので注意。
+それゆえ自動化も難しいが、とりあえずざっくり見てみるべ～のときはこれでいい。
 
 
 調査手法をある程度確立できたら、自動化を検討したってよい。  
@@ -769,9 +771,8 @@ exe版はDefenderで検知される場合があるので、気になる人はpip
 > evtx2json.exe --format jsonl Security.evtx
 ```
 
-Elasticsearchに入れて分析してもよいのだが、  
-検索など単純なタスクに対してシステム側が過剰に複雑になりすぎると思うなら、DuckDBを使うと良い。
-Web UIもついててお得。
+素直にElasticsearchに入れて分析してもよいのだが、  
+検索など単純なタスクに対してシステム側が過剰に複雑になりすぎると思うなら、DuckDBを使うと良い。Web UIもついててお得。
 
 ```bat
 > duckdb.exe -ui
@@ -786,7 +787,7 @@ SELECT * FROM read_json_auto('Security.jsonl');
 ![duckdb](https://github.com/user-attachments/assets/5e0a6e40-388e-4a11-bff6-ffcacece9b2b)
 
 
-あるいはそれをテーブルにしたってよい。
+あるいはテーブルにしたってよい。
 
 ```sql
 CREATE TABLE security AS SELECT * FROM read_json_auto('Security.jsonl');
