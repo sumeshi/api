@@ -777,6 +777,9 @@ JSONLファイルを直接指定して扱える。
 SELECT * FROM read_json_auto('Security.jsonl');
 ```
 
+![duckdb](https://github.com/user-attachments/assets/5e0a6e40-388e-4a11-bff6-ffcacece9b2b)
+
+
 あるいはそれをテーブルにしたってよい。
 
 ```sql
