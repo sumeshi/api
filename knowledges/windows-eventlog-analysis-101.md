@@ -700,6 +700,7 @@ GUIで検索やフィルタができるので、初期の確認には十分使�
 | PowerShell | Windows標準のスクリプト言語。イベントログの抽出・整形に利用できる。           | 一度作っておけば使い回せる。バグがあると二次被害が起きたりするので注意。                     |
 | [Log Parser](https://www.microsoft.com/ja-jp/download/details.aspx?id=24659) | Microsoftが提供していたコマンドラインツール。SQLライクなクエリでログを解析できる。 | 公式ツールだが、開発は終了している。ドキュメントも全然ない。誰か書いてほしい。                     |
 
+https://github.com/sumeshi/evtx2es
 
 | 分析・整形ツール                | 概要                                    | 備考                                   |
 | ----------------------- | ------------------------------------- | ------------------------------------ |
@@ -713,6 +714,8 @@ GUIで検索やフィルタができるので、初期の確認には十分使�
 | [Log Parser Studio](https://learn.microsoft.com/ja-jp/exchange/iis-logs-and-log-parser-studio-reports-exchange-2013-help)  | Log ParserのGUIフロントエンド。   | たぶん配布停止。探せばまだあるが。           |
 | [Log Parser Lizard](https://log-parser.com/)  | Log Parser系のGUIツール。      | Log Parser Studioより高機能。でも使い方がイマイチわからない。      |
 | Splunk                  | 商用のログ管理・分析プラットフォーム。大量ログの検索・可視化に強い。    | 嫌い。                 |
+
+https://github.com/sumeshi/quilt
 
 あと上記とはちょっと毛色が違うけど **ハンティングツール？** の紹介。事前に作っておいた検知ルールでログをスキャンして怪しいイベントを引っ掛けたりすることができる。
 
@@ -750,7 +753,8 @@ EvtxECmdがおすすめ。ファイル指定 `-f` もしくはフォルダ指定
 調査手法をある程度確立できたら、自動化を検討したってよい。  
 詳しくは [ログ解析パッチワーク](https://sumeshi.github.io/posts/works/quilt) を参照。
 
-[ログ解析パッチワーク](https://sumeshi.github.io/posts/works/quilt)
+
+https://sumeshi.github.io/posts/works/quilt
 
 
 #### JSON で扱う

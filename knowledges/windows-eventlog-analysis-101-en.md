@@ -707,6 +707,8 @@ Below is my personal recommendation order.
 | PowerShell | Windows' built-in scripting language. Can be used to extract and shape event logs.           | Reusable once you make it. Watch out, because a bug can cause secondary damage.                     |
 | [Log Parser](https://www.microsoft.com/en-us/download/details.aspx?id=24659) | A command-line tool provided by Microsoft. Analyzes logs with SQL-like queries. | An official tool, but development has ended. Barely any docs. Someone please write them.                     |
 
+https://github.com/sumeshi/evtx2es
+
 
 | Analysis / Shaping Tool                | Overview                                    | Notes                                   |
 | ----------------------- | ------------------------------------- | ------------------------------------ |
@@ -720,6 +722,8 @@ Below is my personal recommendation order.
 | [Log Parser Studio](https://learn.microsoft.com/en-us/exchange/iis-logs-and-log-parser-studio-reports-exchange-2013-help)  | A GUI front-end for Log Parser.   | Probably no longer distributed. You can still find it if you look, though.           |
 | [Log Parser Lizard](https://log-parser.com/)  | A GUI tool in the Log Parser family.      | More capable than Log Parser Studio. But I can't really figure out how to use it.      |
 | Splunk                  | A commercial log management / analysis platform. Strong at searching and visualizing huge logs.    | I hate it.                 |
+
+https://github.com/sumeshi/quilt
 
 Also, slightly different in flavor from the above, an intro to **hunting tools?**. You can scan logs with pre-made detection rules and catch suspicious events.
 
@@ -757,7 +761,8 @@ However, note that the various filters can't be saved (bug?). Automation is also
 Once you've established your investigation methodology to some extent, consider automating it.
 See [Log Analysis Patchwork](https://sumeshi.github.io/posts/works/quilt) for details.
 
-[Log Analysis Patchwork](https://sumeshi.github.io/posts/works/quilt)
+
+https://sumeshi.github.io/posts/works/quilt
 
 
 #### Working with JSON
