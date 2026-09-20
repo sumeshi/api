@@ -644,7 +644,7 @@ evtxの名前は環境によって違うことがあるので注意。
 
 ### 非アナリスト向け
 
-<img width="1040" height="664" alt="image" src="https://github.com/user-attachments/assets/78ccffb2-ad2d-4c9b-938f-80677004d9e8" />
+![eventviewer](https://github.com/user-attachments/assets/78ccffb2-ad2d-4c9b-938f-80677004d9e8)
 
 [イベントビューアー](https://learn.microsoft.com/ja-jp/shows/inside/event-viewer)
 
@@ -660,7 +660,7 @@ GUIで検索やフィルタができるので、初期の確認には十分使�
 
 以下はイベントビューアーからエクスポートしたわけのわからないCSVファイルの例。1カラムに多数の改行が含まれている。張り倒すぞ。
 
-<img width="999" height="333" alt="image" src="https://github.com/user-attachments/assets/1575ba11-560f-4f4f-b90e-f3a578c68d19" />
+![yabasugi-csv](https://github.com/user-attachments/assets/1575ba11-560f-4f4f-b90e-f3a578c68d19)
 
 
 ファストフォレンジックを見越してデータ取得するなら、[CDIR-Collector](https://github.com/CyberDefenseInstitute/CDIR) あたりをつかっておけばよい。`exe` ポチポチで主要なデータはゴソッと取れる。  
@@ -737,11 +737,11 @@ EvtxECmdがおすすめ。ファイル指定 `-f` もしくはフォルダ指定
 > EvtxECmd.exe -f Security.evtx --csv . --csvf Security.csv
 ```
 
-<img width="1051" height="628" alt="image" src="https://github.com/user-attachments/assets/7b9bb6c4-e731-4c82-bb08-ad737ebee891" />
+![evtxecmd](https://github.com/user-attachments/assets/7b9bb6c4-e731-4c82-bb08-ad737ebee891)
 
 データのフィルタリングは Timeline Explorer がおすすめ。  
 
-<img width="1257" height="761" alt="image" src="https://github.com/user-attachments/assets/03952f18-8d18-4cde-bb75-cf68ca3b0239" />
+![timelineexplorer](https://github.com/user-attachments/assets/03952f18-8d18-4cde-bb75-cf68ca3b0239)
 
 `Event Id = 4624` のように条件式でフィルタをかけたり、カラムをクリックしてソートしたり、グルーピングしたり、思いつくほとんどのことはできる。  
 ただし、各種フィルタなどが保存できない（バグ？）ので注意。自動化も難しいが、とりあえずざっくり見てみるべ～のときはこれでいい。
@@ -749,6 +749,8 @@ EvtxECmdがおすすめ。ファイル指定 `-f` もしくはフォルダ指定
 
 調査手法をある程度確立できたら、自動化を検討したってよい。  
 詳しくは [ログ解析パッチワーク](https://sumeshi.github.io/posts/works/quilt) を参照。
+
+[ログ解析パッチワーク](https://sumeshi.github.io/posts/works/quilt)
 
 
 #### JSON で扱う
