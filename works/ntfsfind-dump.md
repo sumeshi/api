@@ -11,6 +11,8 @@ Windowsイメージファイルから直接ファイルをぶっこ抜く方法�
 
 Windowsのシステムを対象とする場合、一般的には、[FTK Imager](https://www.exterro.com/digital-forensics-software/ftk-imager) とか [Arsenal Image Mounter](https://arsenalrecon.com/products/arsenal-image-mounter) でやることが多いです。
 
+![ftkimager](https://github.com/user-attachments/assets/7da6f2ca-9b57-49e0-b720-22b8fcdf3859)
+
 これらのツールはGUIで非常に使いやすい一方、大量のイメージを機械的に処理することには向いていません。  
 調査対象が数十台とかあると非常にしんどいので、イメージファイルから直接ファイルを検索してぶっこ抜くツールをつくりました。
 
