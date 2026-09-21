@@ -96,7 +96,7 @@ SANS Instituteが公開している、[Windows Forensic Analysis POSTER](https:/
 
 Securityログに限っていえば、[Security Log Encyclopedia](https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/) も非常に参考になる。Undocumentedなイベントも多いので、気になるEvent IDがあったらここで調べるとよい。
 
-それでも見つからないときには、[detection.wiki](https://detection.wiki/) や [MyEventlog](https://www.myeventlog.com/search/show/980) で探すと見つかるかも。EventIDはびっくりすることに一意の識別番号ではない~~狂気の~~仕様なのだが、ちゃんとProvider/Channelごとにまとめられている。
+それでも見つからないときには、[detection.wiki](https://detection.wiki/) や [MyEventlog](https://www.myeventlog.com/search/show/980) で探すと見つかるかも。EventIDはびっくりすることに一意の識別番号ではない ~~狂気の~~ 仕様なのだが、ちゃんとProvider/Channelごとにまとめられている。
 
 さらにニッチなやつはググりまくると見つかったりする。実機のディスクイメージ保全してるなら[無理やり](https://zenn.dev/sum3sh1/articles/ef4c1f7a8ba267)[ブート](https://zenn.dev/sum3sh1/articles/08fe13c70d5b24)してイベントビューアで直接開いてもいいけどね。
 
@@ -791,6 +791,60 @@ SELECT * FROM read_json_auto('Security.jsonl');
 
 ```sql
 CREATE TABLE security AS SELECT * FROM read_json_auto('Security.jsonl');
+```
+
+CLIからちょっと触りたいだけなら jq でもいいが、コマンドがあまり直感的ではないので毎回思い出せない。  
+AIに聞くか、素直にCSVでやろう。
+
+```bash
+# 4624でgrepした結果を整形表示
+$ rg 4624 Security.jsonl | jq
+{
+  "@timestamp": "2015-03-25T10:15:35.311270Z",
+  "event": {
+    "action": "eventlog-security-4624",
+    "category": [
+      "host"
+    ],
+    "type": [
+      "info"
+    ],
+    "kind": "event",
+    "provider": "microsoft-windows-security-auditing",
+    "module": "windows",
+    "dataset": "windows.eventlog",
+    "code": 4624,
+    "created": "2015-03-25T10:15:35.311270Z"
+  },
+  ...
+
+# Event IDごとの件数集計
+$ jq -r '.winlog.event_id' Security.jsonl | sort | uniq -c | sort -rn
+    742 4907
+    141 4624
+    112 4672
+     34 4735
+     24 4738
+     ...
+
+# 特定のEvent IDだけ抜き出してカラムを整形表示
+$ jq -r 'select(.winlog.event_id == 4624) | [."@timestamp", ."winlog"."event_data"."LogonType"] | @tsv' Security.jsonl
+2015-03-25T10:15:35.311270Z     0
+2015-03-25T10:15:37.713674Z     5
+2015-03-25T10:15:38.914876Z     5
+2015-03-25T10:15:46.683689Z     5
+2015-03-25T10:15:46.995690Z     5
+...
+
+# ログオン成功のターゲットユーザー回数一覧
+$ jq -r 'select(.winlog.event_id == 4624) | .winlog.event_data.TargetUserName' Security.jsonl | sort | uniq -c | sort -rn
+     92 SYSTEM
+     20 informant
+      8 NETWORK SERVICE
+      8 LOCAL SERVICE
+      8 ANONYMOUS LOGON
+      4 admin11
+      1 temporary
 ```
 
 

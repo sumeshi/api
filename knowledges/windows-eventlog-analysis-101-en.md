@@ -800,6 +800,60 @@ Or you can make a table out of it.
 CREATE TABLE security AS SELECT * FROM read_json_auto('Security.jsonl');
 ```
 
+If you just want to poke at it from the CLI, jq works too, but the commands aren't very intuitive so I can never remember them.
+Ask AI, or just do it with CSV.
+
+```bash
+# Format the grep results for 4624
+$ rg 4624 Security.jsonl | jq
+{
+  "@timestamp": "2015-03-25T10:15:35.311270Z",
+  "event": {
+    "action": "eventlog-security-4624",
+    "category": [
+      "host"
+    ],
+    "type": [
+      "info"
+    ],
+    "kind": "event",
+    "provider": "microsoft-windows-security-auditing",
+    "module": "windows",
+    "dataset": "windows.eventlog",
+    "code": 4624,
+    "created": "2015-03-25T10:15:35.311270Z"
+  },
+  ...
+
+# Count events per Event ID
+$ jq -r '.winlog.event_id' Security.jsonl | sort | uniq -c | sort -rn
+    742 4907
+    141 4624
+    112 4672
+     34 4735
+     24 4738
+     ...
+
+# Extract a specific Event ID and format columns
+$ jq -r 'select(.winlog.event_id == 4624) | [."@timestamp", ."winlog"."event_data"."LogonType"] | @tsv' Security.jsonl
+2015-03-25T10:15:35.311270Z     0
+2015-03-25T10:15:37.713674Z     5
+2015-03-25T10:15:38.914876Z     5
+2015-03-25T10:15:46.683689Z     5
+2015-03-25T10:15:46.995690Z     5
+...
+
+# Count of successful logons per target user
+$ jq -r 'select(.winlog.event_id == 4624) | .winlog.event_data.TargetUserName' Security.jsonl | sort | uniq -c | sort -rn
+     92 SYSTEM
+     20 informant
+      8 NETWORK SERVICE
+      8 LOCAL SERVICE
+      8 ANONYMOUS LOGON
+      4 admin11
+      1 temporary
+```
+
 
 ## Closing
 
