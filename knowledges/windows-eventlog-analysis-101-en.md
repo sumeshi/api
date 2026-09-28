@@ -613,6 +613,7 @@ For now, when you want to narrow by Provider/Channel count and skim, focus on th
 - Directory Service.evtx
 - Microsoft-Windows-Bits-Client%4Operational.evtx
 - Microsoft-Windows-CodeIntegrity%4Operational.evtx
+- Microsoft-Windows-DNS-Client%4Operational.evtx
 - Microsoft-Windows-DNSServer%4Audit.evtx
 - Microsoft-Windows-GroupPolicy%4Operational.evtx
 - Microsoft-Windows-Kernel-Boot%4Operational.evtx
@@ -621,6 +622,8 @@ For now, when you want to narrow by Provider/Channel count and skim, focus on th
 - Microsoft-Windows-PowerShell%4Admin.evtx
 - Microsoft-Windows-PowerShell%4Operational.evtx
 - Microsoft-Windows-RemoteDesktopServicesRdpCoreTS%4Operational.evtx
+- Microsoft-Windows-SMBClient%4Operational.evtx
+- Microsoft-Windows-SMBClient%4Security.evtx
 - Microsoft-Windows-SMBServer%4Operational.evtx
 - Microsoft-Windows-SMBServer%4Security.evtx
 - Microsoft-Windows-SmbClient%4Connectivity.evtx
@@ -636,8 +639,6 @@ For now, when you want to narrow by Provider/Channel count and skim, focus on th
 - Microsoft-Windows-Windows Firewall With Advanced Security%4Firewall.evtx
 - Microsoft-Windows-Windows Firewall With Advanced Security%4FirewallDiagnostics.evtx
 - Microsoft-Windows-WindowsUpdateClient%4Operational.evtx
-- OpenSSH%4Admin.evtx
-- OpenSSH%4Operational.evtx
 - Security.evtx
 - Setup.evtx
 - System.evtx
