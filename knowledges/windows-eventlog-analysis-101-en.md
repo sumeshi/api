@@ -1,10 +1,9 @@
 # How Do You Investigate Windows Event Logs?
 Vague notes on Windows event log investigation. I'll add more as I remember.
 
-<img width="960" height="540" alt="win" src="https://github.com/user-attachments/assets/519ecf99-7a14-40a1-8e17-cc8690da1e86" />
+![title](https://github.com/user-attachments/assets/519ecf99-7a14-40a1-8e17-cc8690da1e86)
 
 > **Note:** This is the English translation of the Japanese original. The Japanese version is available at https://sumeshi.github.io/posts/knowledges/windows-eventlog-analysis-101.
-> The snark is preserved as-is. Deal with it.
 
 
 ## Introduction
