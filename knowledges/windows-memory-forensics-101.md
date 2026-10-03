@@ -1,5 +1,5 @@
 # a tale of volatile memories.
-だからWindowsは神様だった。
+だからWindowsは神様だ。
 
 ## はじめに
 
@@ -72,20 +72,19 @@ Windowsでは、下記のファイルにもメモリの一部あるいは全部�
 
 メモリを取得するツールは様々あるが、インシデント対応であれば [Magnet RESPONSE](https://www.magnetforensics.com/resources/magnet-response/) のような収集ツールを使うとよい。メモリだけでなく、pagefile.sysや揮発性の高いデータ、主要なアーティファクトもまとめて保全してくれる。
 
-![[Pasted image 20261003164427.png]]
+![capture](https://github.com/user-attachments/assets/ccabbab6-4c10-4d28-a03f-7dffdb4b1ad5)
 
-![[Pasted image 20261003164513.png]]
+![capture-completed](https://github.com/user-attachments/assets/223bc154-a91f-4621-84c3-c7ea2a4a98dd)
 
-![[Pasted image 20261003164705.png]]
 
 以前は [FTK Imager](https://www.exterro.com/digital-forensics-software/ftk-imager) も有用な選択肢だったのだが、一時期うまくメモリが取得できないなどの不具合があり（現在は解消）評判が落ちてしまった。悲しいね。  
 業界的にもMagnetのほうが最近は人気がある気がする。
 
-![[Pasted image 20261003164749.png]]
+![ftkimager](https://github.com/user-attachments/assets/b20b304c-4d8d-4ef4-a375-93b17f018c9e)
 
 日本国内においては、[CDIR-Collector](https://github.com/CyberDefenseInstitute/CDIR) もよく使われている。メモリと主要なアーティファクトをまとめて保全できる。pagefile.sysは収集対象外だが、あまり気にしないというならばこっちで。
 
-![[Pasted image 20261003164931.png]]
+![cdirini](https://github.com/user-attachments/assets/27205b84-b499-45db-a5db-340b6ecda47d)
 
 取得項目は`cdir.ini`で設定する。メモリを取得する場合は`MemoryDump = true`を有効にしておき、`cdir-collector.exe`をカチカチすると保全できる。
 
@@ -152,6 +151,8 @@ Fast Startupによるシャットダウン時に保存された`hiberfil.sys`は
 
 解析対象とOSは合わせておくと吉。WindowsならWindowsがいい。  
 文字列周りはLinuxのが触りやすい場合もあるので、[SIFT Workstation](https://www.sans.org/tools/sift-workstation) あたりを使っても良い。
+
+![sift](https://github.com/user-attachments/assets/7c6c83cd-5044-4781-ae52-60fad30ebeb0)
 
 
 ## 解析手法1: バイナリ解析
@@ -368,6 +369,8 @@ $ scalpel -c scalpel.conf -o scalpel-out memory.raw
 
 TestDiskに同梱されているので、ダウンロードして`qphotorec_win.exe`を起動するとGUI版が使える。
 
+![photorec](https://github.com/user-attachments/assets/d7fc351b-6f87-4643-b7fb-dae700a616e5)
+
 
 #### bulk_extractor-rec
 
@@ -375,6 +378,8 @@ TestDiskに同梱されているので、ダウンロードして`qphotorec_win.
 
 BE Viewerを開いて、Toolsからrun Bulk Extractorをクリックするとファイル選択ができる。  
 PhotoRecなどで抽出できなかったイベントログなどもかなり引っかかる。
+
+![bulkextractor](https://github.com/user-attachments/assets/99041bfd-5aee-47a8-9e90-76ba239afc60)
 
 
 ## 解析手法2: 管理構造の解析
@@ -400,7 +405,8 @@ Windowsでは [Wiki](https://github.com/ufrisk/MemProcFS/wiki) に従ってDokan
 > .\MemProcFS.exe -device C:\Cases\memory.raw -mount M -forensic 4
 ```
 
-![[Pasted image 20261003172559.png]]
+![mount](https://github.com/user-attachments/assets/a81eeb9f-84a6-4941-88a7-d30c1c79be6d)
+
 
 起動時に`-forensic`をつけてフォレンジックモードを有効にすることで、同じ入力イメージ・設定・MemProcFSバージョンでの解析結果を再現しやすくなる。マウント後に有効化すると、キャッシュや処理順序の違いから差異が出る可能性がある。
 
@@ -448,20 +454,23 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 
 システムに関する情報がいろいろある。まずはここを見ると良い。
 
-![[Pasted image 20261003182724.png]]
+![sys](https://github.com/user-attachments/assets/4261220b-6288-40f5-acf6-ca9f17c8cd1f)
+
 
 タイムゾーンやバージョン情報、コンピュータ名などなど。
 あとは`proc/proc.txt`あたりを見るとプロセスツリーが見れる。
 
-![[Pasted image 20261003182836.png]]
+![proc](https://github.com/user-attachments/assets/7c4b011d-f64c-4e71-bae3-eee311c4dce5)
 
-同様に、`users/users.txt`でユーザー一覧、`tasks/tasks.txt`でスケジュールされたタスク一覧、`net/netstat.txt`でネットワーク接続などが見れる。一通り見てからアタリをつけて掘り下げるといい感じ。
+同様に、`users/users.txt`でユーザー一覧、`tasks/tasks.txt`でスケジュールされたタスク一覧、`net/netstat.txt`でネットワーク接続などが見れる。  
+一通り見てからアタリをつけて掘り下げるといい感じ。
+
 
 #### forensic
 
 フォレンジック用にわかりやすくまとめたデータが置かれている。
 
-![[Pasted image 20261003174827.png]]
+![forensic](https://github.com/user-attachments/assets/8d10ed53-bd37-4254-9439-e018e5907a10)
 
 とりあえず見るべきは `csv`, `files`, `ntfs` あたりかな。
 
@@ -471,15 +480,16 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 `M:\forensic\files\files.txt`には復元されたファイルの一覧がある。気になるものがあれば、`files`配下からもらってきて分析しましょう。元パスと同様にフォルダが再構成されているので探しやすい。
 NTFSでは、サイズの小さいファイルの内容がMFTレコード内に直接記録されることがある。`files`に見当たらなければ、`ntfs`側を見るとよいかもしれない。
 
-![[Pasted image 20261003180220.png]]
+![csv](https://github.com/user-attachments/assets/06994dc4-c49f-4ac9-b7bb-ca0af24966d4)
+
 
 #### name / pid
 
 どちらもプロセスに関する情報で、それがプロセス名別かPID別かというだけ。nameの方は末尾にプロセスIDがついているのでそっちのが見やすいかも。
 
-![[Pasted image 20261003180638.png]]
+![name](https://github.com/user-attachments/assets/6984680a-fa98-40bd-a6de-84451325e76c)
 
-![[Pasted image 20261003180652.png]]
+![pid](https://github.com/user-attachments/assets/d09a5fd7-b4f7-495f-b092-4315ea7eac7c)
 
 `name-long`がプロセス名、`pid`がプロセスID、`ppid`が親のプロセスID、`time-create`が作成時刻、`win-cmdline`がコマンドライン、`win-environment`が環境変数。名前の通り。
 
@@ -490,19 +500,20 @@ NTFSでは、サイズの小さいファイルの内容がMFTレコード内に�
 
 .evtxで検索するとイベントログが見つかったりする。ディスク側で削除されていても一部イベントの復元ができるかも。見つけたら[調査してみるとよい](https://sumeshi.github.io/posts/knowledges/windows-eventlog-analysis-101) 。
 
-![[Pasted image 20261003181311.png]]
+![evtx](https://github.com/user-attachments/assets/6a43c9d8-1567-4f5d-8e92-259d42a39592)
 
-![[Pasted image 20261003181432.png]]
+![others](https://github.com/user-attachments/assets/8e40de73-f7f4-4efd-9d2c-9f88660b8b2a)
 
 
 #### registry
 
 名前の通りレジストリハイブ。ハイブファイルも置かれてるし、パースされたテキストもある。
 
-![[Pasted image 20261003182638.png]]
+![registry](https://github.com/user-attachments/assets/ad63c942-d688-4e79-a2ca-0093020020d9)
 
 個人的にはRegistryExplorerとかで見るほうが見やすい。が、壊れていることもよくある。
-![[Pasted image 20261003182416.png]]
+
+![regexp](https://github.com/user-attachments/assets/533a8a97-ae71-4abe-b6a2-8e86bdd6db19)
 
 レジストリへの変更はメモリ上のハイブに反映され、トランザクションログ（`.LOG1`、`.LOG2`）を使いながらディスクへ書き戻される。そのため、メモリのほうがディスク上にあるものよりも新しい場合もある。見る価値はある。
 
@@ -520,10 +531,12 @@ Volatility 2と3がよく使われるが、最近のOSなら3でいい。たま�
 また、Volatilityは慣れないと使いづらい。[Volatility Workbench](https://www.osforensics.com/tools/volatility-workbench.html) や[KaniVola](https://github.com/4n6ist/KaniVola) などのラッパーを使うとかなり楽。コマンドをカチャカチャ打つほうが気持ちいいのはわかるのだが、実際インシデント対応してるときにそんな暇はないことがほとんど。
 
 3系ならVolatility Workbenchがすごく使いやすい。
-![[Pasted image 20261003183952.png]]
+
+![vwork](https://github.com/user-attachments/assets/1ccd3179-596f-47e0-ba29-07303ab4128b)
 
 2系ならKaniVolaがよい。
-![[Pasted image 20261003184427.png]]
+
+![kanivol](https://github.com/user-attachments/assets/deba30e7-c826-47c6-93a6-04b8d5d574f1)
 
 以下はVolatility 3をコマンドラインから実行する前提での解説。Volatility Workbenchを使っている場合は、対応するプラグインを選択して、PIDなどのオプションを設定すればよい。
 
