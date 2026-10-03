@@ -77,7 +77,7 @@ Windowsでは、下記のファイルにもメモリの一部あるいは全部�
 ![capture-completed](https://github.com/user-attachments/assets/223bc154-a91f-4621-84c3-c7ea2a4a98dd)
 
 
-以前は [FTK Imager](https://www.exterro.com/digital-forensics-software/ftk-imager) も有用な選択肢だったのだが、一時期うまくメモリが取得できないなどの不具合があり（現在は解消）評判が落ちてしまった。悲しいね。  
+以前は [FTK Imager](https://www.exterro.com/digital-forensics-software/ftk-imager) も有用な選択肢だったのだが、一時期うまくメモリが取得できないなどの不具合があり（現在は解消？）評判が落ちてしまった。悲しいね。  
 業界的にもMagnetのほうが最近は人気がある気がする。
 
 ![ftkimager](https://github.com/user-attachments/assets/b20b304c-4d8d-4ef4-a375-93b17f018c9e)
@@ -205,7 +205,7 @@ Windowsの標準環境にはgzipコマンドがないので、出力後に [7-Zi
 Linuxなら `pv` から入力ファイルを読み込ませると、処理済みサイズ、転送速度、進捗率、残り時間の目安を確認できる。
 
 ```bash
-$ strings -a -n 8 -t x memory.raw | pv | gzip -c > memory-strings-ascii.txt.gz
+$ pv memory.raw | strings -a -n 8 -t x | gzip -c > memory-strings-ascii.txt.gz
 ```
 
 Windowsにはそんなものない。諦めよう。
@@ -526,7 +526,7 @@ NTFSでは、サイズの小さいファイルの内容がMFTレコード内に�
 
 [vol-rs](https://github.com/daffainfo/vol-rs) という高速なRust実装版もある。CTFとかならこういうの使ってもいいかもね。まだ成熟したプロダクトではないので、実務で使う場合は評価検証が必要だと思う。
 
-Volatility 2と3がよく使われるが、最近のOSなら3でいい。たまに古代の発掘品とかが来たときは2じゃないと動かないときもある。どちらも用意しておくとよい。
+Volatility 2と3がよく使われるが、最近のOSなら3でいい。たまに古代の発掘品とかが来たときは2じゃないと動かないときもある？どちらも用意しておくとよい。
 
 また、Volatilityは慣れないと使いづらい。[Volatility Workbench](https://www.osforensics.com/tools/volatility-workbench.html) や[KaniVola](https://github.com/4n6ist/KaniVola) などのラッパーを使うとかなり楽。コマンドをカチャカチャ打つほうが気持ちいいのはわかるのだが、実際インシデント対応してるときにそんな暇はないことがほとんど。
 
@@ -663,13 +663,13 @@ $ vol3.py -f memory.raw windows.vadyarascan --yara-file ioc.yar
 $ mkdir -p 4240/pe 4240/pages out/suspicious
 
 # プロセスの実行イメージをPEとしてダンプ
-$ vol -f memory.raw -o 4240/pe windows.pslist --pid 4240 --dump
+$ vol3.py -f memory.raw -o 4240/pe windows.pslist --pid 4240 --dump
 
 # 読み取り可能なプロセスメモリを抽出し、アドレスとの対応を保存する
-$ vol -q -f memory.raw -o 4240/pages windows.memmap --pid 4240 --dump > memmap-4240.txt
+$ vol3.py -q -f memory.raw -o 4240/pages windows.memmap --pid 4240 --dump > memmap-4240.txt
 
 # malfindによって検出された領域を抽出する
-$ vol -f memory.raw -o 4240/suspicious windows.malware.malfind --pid 4240 --dump
+$ vol3.py -f memory.raw -o 4240/suspicious windows.malware.malfind --pid 4240 --dump
 ```
 
 ダンプしたPEは通常、もとのPEファイルと同一ではないので、VirusTotalなどでハッシュ値からもとの検体を同定することはできない。  
@@ -701,7 +701,7 @@ $ vol3.py -q -f memory.raw windows.filescan > filescan.txt
 
 ```bash
 $ mkdir -p out/cache
-$ vol -f memory.raw -o out/cache windows.dumpfiles --virtaddr 0xffff800012345670
+$ vol3.py -f memory.raw -o out/cache windows.dumpfiles --virtaddr 0xffff800012345670
 ```
 
 `--virtaddr`と`--physaddr`は、それぞれ`FILE_OBJECT`の仮想アドレスと物理アドレスを受け取る。
@@ -709,7 +709,7 @@ $ vol -f memory.raw -o out/cache windows.dumpfiles --virtaddr 0xffff800012345670
 プロセスとの関連が分かっていれば、PIDを指定して復元候補を絞ることもできる。
 
 ```bash
-$ vol -f memory.raw -o out/cache windows.dumpfiles --pid 4240
+$ vol3.py -f memory.raw -o out/cache windows.dumpfiles --pid 4240
 ```
 
 `filescan`で名前が見つかっても、ファイル内容がしっかり残っているとは限らない。
@@ -721,7 +721,7 @@ $ vol -f memory.raw -o out/cache windows.dumpfiles --pid 4240
 メモリフォレンジックをしていると、ファイルがグチャグチャになりがち。ホストや取得プロセスごとにフォルダを分け、いい感じに整理しておくとよい。
 MemProcFSであれば、タイムラインやCSVも出力してくれるので、アンマウントする前にそのあたりも一通りコピーしておく。
 
-整理は本当に大変なので、面倒なら[AIにぶん投げても良い](https://sumeshi.github.io/posts/works/dont-make-ai-your-forensic-analyst)と思う。
+整理は本当に大変なので、面倒なら[AIにぶん投げても良い](https://sumeshi.github.io/posts/works/dont-make-ai-your-forensic-analyst)と思う。ただし情報の取り扱いには最新の注意を払うこと。
 
 ツールによって結果の食い違いが発生することもままある。  
 どちらかが間違っていると決めつける前に、各ツールが何をたどって列挙しているかを確認する。参照する管理構造や、終了済みオブジェクト・欠損ページの扱いが違えば、結果も変わる。
