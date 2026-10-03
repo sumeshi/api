@@ -1,5 +1,5 @@
-# 話さないのなら、君のメモリーをVolatilityで調べるしかなさそうだな。
-イヤだ！それだけはやめてくれ……。
+# a tale of volatile memories.
+だからWindowsは神様だった。
 
 ## はじめに
 
@@ -18,16 +18,16 @@
 RAM上の物理メモリを指す場合もあれば、プロセスから見える仮想メモリを指す場合もあるのだが、OSやアプリケーションが動作中のコードやデータを置く場所、としてざっくり読んで貰えれば。
 
 メモリは、情報を長期間保存しておくための媒体ではなく、OSやアプリケーションの動作に合わせて内容が書き換わり、プロセスの終了やメモリ領域の再利用によって、それまでの情報は失われていく。
-また、電源供給が絶たれればデータはすべて吹き飛ぶ（揮発性）ので、侵害されたコンピュータの電源を落としてしまうと情報は永遠に失われてしまう。可能なら起動したままにしておきたい。
+また、電源供給が絶たれればデータはすべて吹き飛ぶ（揮発性）ので、侵害されたコンピュータの電源を落としてしまうと情報は永遠に失われてしまう。可能ならシャットダウンや再起動の前に保全しておきたい。
 
-そのため、動作中のコンピュータででRAMの内容を保全し、そのイメージを解析するのが一般的である。このメモリの内容を取得してファイルに保存したものを、メモリイメージあるいはメモリダンプと呼ぶ。  
+動作中のコンピュータからメモリの内容を取得することをライブ取得といい、それをファイルに保存したものをメモリイメージあるいはメモリダンプと呼ぶ。一般的にこのメモリイメージを一生懸命解析していくことになる。
 
-メモリ効率の問題から、一部のデータはディスクに書き出される（pagefile.sysなど）ため、それも補助的な調査対象になる。
+メモリ効率のため、一部のデータをOSがディスクに書き出す場合がある（pagefile.sysなど）。それも補助的な調査対象になる。
 
 
 ### メモリに残る情報
 
-メモリには、プログラムのコード、スタックやヒープ、ロードされたDLL、プロセスやソケットの管理構造などが置かれる。これらを解析すると、取得時点でどのようなプロセスが動き、どのコマンドラインで起動され、どこと通信接続していたのかを調べられる。
+メモリには、プログラムのコード、スタックやヒープ、ロードされたDLL、プロセスやソケットの管理構造などが置かれる。これらを解析すると、取得時点でどのようなプロセスが動き、どのコマンドラインで起動され、どこへの接続があったのかを調べられる。
 
 また、プロセスが掴んでいたファイルやレジストリのキャッシュが残っていることもある。例えば、ログを消去する前のレコードやEVTXの一部がメモリに残っていれば、ディスク側から追えなくなったイベントログを回収できる場合がある。
 
@@ -36,11 +36,11 @@ RAM上の物理メモリを指す場合もあれば、プロセスから見え�
 
 ### 物理メモリと仮想メモリ
 
-一口にメモリといっても、プロセスから見える仮想メモリと、RAM上の物理的な配置は異なる。Windowsはページと呼ばれる単位でメモリを管理し、ページテーブルを使って仮想アドレスと物理アドレスを対応付けている。そのため、プロセスから連続して見える領域でも、物理メモリでは離れた場所に配置されていることがある。
+プロセスから見える仮想メモリと、RAM上の物理的な配置は異なる。Windowsはページと呼ばれる単位でメモリを管理し、ページテーブルを使って仮想アドレスと物理アドレスを対応付けている。そのため、プロセスから連続して見える領域でも、物理メモリでは離れた場所に配置されていることがある。
 
-この違いは、検索や復元の結果にも影響する。例えば、文字列が物理的に離れたページに分かれていると、物理メモリを先頭から検索するだけでは見つからないことがある。　　
+この違いは、検索や復元の結果にも影響する。例えば、文字列が物理的に離れたページに分かれていると、物理メモリを先頭から検索するだけでは見つからないことがある。
 
-そんなときは、ツールでページの対応を解釈し、プロセスの仮想メモリとして検索すれば見つかる場合もある。  
+そんなときは、ツールでページの対応付けを行い、プロセスの仮想メモリとして再構成してから検索すれば見つかる場合もある。  
 逆に、すでにプロセスから参照されなくなった断片は、物理メモリを直接走査した方が見つかることもあるので、どちらか一方が優れているとかそういう話でもない。
 
 
@@ -48,24 +48,24 @@ RAM上の物理メモリを指す場合もあれば、プロセスから見え�
 
 ### 保全時の注意点
 
-ライブ取得には時間がかかります。体感では1GBあたり1分くらいかな。バカデカメモリの場合は注意。
+ライブ取得には時間がかかります。取得ツールや保存先の速度にもよるが、体感では1GBあたり1分くらいかな。  
+バカデカメモリの場合は注意。
 
-また、前述の通りメモリの取得中もOSやアプリケーションは動いているため、イメージの先頭と末尾で状態が食い違うこともある。  
-この不整合は[Memory Smear](https://www.nist.gov/glossary-term/39326)と呼ばれます。
+メモリ取得中もOSやアプリケーションが動いているため、イメージ内の領域ごとに取得時点がズレ、管理構造やデータの状態が食い違うこともある。この不整合は[Memory Smear](https://www.nist.gov/glossary-term/39326)と呼ばれます。
 
 
 ### メモリ外の保全対象
 
-Windowsの場合、下記のようなファイルとしてメモリの一部あるいは全部が書き出される可能性がある。欠損部分を復元できる場合があるため、可能なら一緒に保全しておくこと。
+Windowsでは、下記のファイルにもメモリの一部あるいは全部が書き出されることがある。欠損部分を復元したり、過去の状態を調べられる場合があるため、可能なら一緒に保全しておくこと。
 
 | ファイル | 含まれる情報 |
 | --- | --- |
 | `C:\pagefile.sys` | メモリから退避されたページ |
-| `C:\swapfile.sys` | Windowsが退避したアプリケーションのメモリなど, Win8/WinSrv2012以降のみ |
+| `C:\swapfile.sys` | アプリケーションのメモリを退避するファイル。Windows 8/Server 2012以降のみ |
 | `C:\hiberfil.sys` | 休止状態やFast Startupで保存された状態 |
-| `C:\Windows\MEMORY.DMP` | クラッシュダンプ |
+| `C:\Windows\MEMORY.DMP` | クラッシュ時などのメモリダンプ。含まれる範囲はダンプの種類による |
 
-メモリと保全タイミングがズレると、ツールが誤ったプロセスの解釈を行う場合がある。近いタイミングで取得できるツールを使うこと。
+`pagefile.sys`や`swapfile.sys`をRAMの欠損部分の補完に使う場合は、できるだけ近いタイミングで取得すること。取得タイミングがズレると、再利用されたページを誤って結び付けてしまうことがある。
 
 
 ### 取得ツール
@@ -78,18 +78,19 @@ Windowsの場合、下記のようなファイルとしてメモリの一部あ�
 
 ![[Pasted image 20261003164705.png]]
 
-以前は [FTK Imager](https://www.exterro.com/digital-forensics-software/ftk-imager) も有用な選択肢だったのだが、一時期うまくメモリが取得できないなどの不具合があり（現在は解消）評判が落ちてしまった。悲しいね。業界的にもMagnetのほうが最近は人気がある気がする。
+以前は [FTK Imager](https://www.exterro.com/digital-forensics-software/ftk-imager) も有用な選択肢だったのだが、一時期うまくメモリが取得できないなどの不具合があり（現在は解消）評判が落ちてしまった。悲しいね。  
+業界的にもMagnetのほうが最近は人気がある気がする。
 
 ![[Pasted image 20261003164749.png]]
 
-日本国内においては、[CDIR-Collector](https://github.com/CyberDefenseInstitute/CDIR) もよく使われている。メモリと主要なアーティファクトをまとめて保全できる。pagefile.sysは収集対象外だが、あまり気にしなくていいという方はこっちのほうが普及はしている。
+日本国内においては、[CDIR-Collector](https://github.com/CyberDefenseInstitute/CDIR) もよく使われている。メモリと主要なアーティファクトをまとめて保全できる。pagefile.sysは収集対象外だが、あまり気にしないというならばこっちで。
 
 ![[Pasted image 20261003164931.png]]
 
-CDIR-Collectorの取得項目は`cdir.ini`で設定する。RAMも取得するなら`MemoryDump = true`を指定しておき、cdir-collector.exeをカチカチすると保全できる。
+取得項目は`cdir.ini`で設定する。メモリを取得する場合は`MemoryDump = true`を有効にしておき、`cdir-collector.exe`をカチカチすると保全できる。
 
-どのツールを使う場合も、対象のWindowsのビルドやCPUアーキテクチャ、ドライバ読み込みの制約を含めて事前に試しておくこと。  
-また、解析対象が複数台ある場合、取得後にファイルサイズがおかしくないか、プロセス一覧が読めるか程度は確認しておきたい。あとから取り直すというのは難しい。
+どのツールを使う場合でも当てはまることだが、対象のWindowsのビルドやCPUアーキテクチャ、ドライバ読み込みの制約を含めて事前に試しておくこと。
+調査対象が複数あるとか、後で解析しますという場合、取得後にファイルサイズがおかしくないか、プロセス一覧が読めるか程度は確認しておきたい。あとから取り直します、というのは難しい。
 
 
 ### 保全時の記録
@@ -115,18 +116,17 @@ Magnet RESPONSEの場合、これらの情報はログとして出力してく�
 > .\HibRec.exe /HiberFil=C:\Cases\hiberfil.sys
 ```
 
-初回起動時にアクティベーション画面が出てくるが、Cancelで閉じるとFree Modeで起動できる。
+初回起動時にアクティベーション画面が出てくるが、Cancelで閉じるとFree Modeで起動できる。気に入ったらProfessional版のライセンスを買いましょう。
 
 主な出力は下記。
 
 | 出力 | 内容と使い道 |
 | --- | --- |
 | `ActiveMemory.bin` | 保存されていたメモリを展開・再構成したもの。対応するメモリ解析ツールへ渡す |
-| `DecompressedSlackLegacy.bin` / `DecompressedSlackModern.bin` | 現在の有効な保存データの外に残る領域（slack）を展開したもの。文字列検索やカービングの対象にする |
+| `RawSlackChunks/` | 現在の有効な保存データの外に残る領域（slack）。文字列検索やカービングの対象にしてもよい |
 | `HibRec.log` | 処理内容やエラーを確認するためのログ |
 
-slackには以前の休止処理などのデータが残る場合があるので、`ActiveMemory.bin`と同じ時点の状態として混ぜずに調べる。  
-Fast Startup設定時に保存されたhiberfil.sysは、ユーザーセッション全体を含まないため、ライブ取得したRAMと同じ範囲を調べられるわけではない。ハイバネーションのタイミングによっては、過去のメモリ状態と現在のメモリ状態2つを手に入れられるので、点ではなく線の解析ができる。
+Fast Startupによるシャットダウン時に保存された`hiberfil.sys`は、ユーザーセッション全体を含まないため、ライブ取得したメモリと同じ範囲を調べられるわけではない。休止状態のタイミングによっては、過去のメモリ状態と現在のメモリ状態の2つを手に入れられるので、点ではなく線の解析ができる。
 
 
 ## 解析の準備
@@ -134,7 +134,7 @@ Fast Startup設定時に保存されたhiberfil.sysは、ユーザーセッシ�
 ### 調査目的
 
 何を調べたいかによって調査項目は異なる。  
-たとえば、すでに見つかっているマルウェアの痕跡がないかを調べたいなら、特徴的な文字列やIOCでバイナリに検索かけても良いし、通信先などの情報を知りたいならプロセスの構造を分析する。
+たとえば、既知のマルウェアの痕跡を探すなら、特徴的な文字列やIOCでメモリイメージを検索しても良い。どのプロセスがどこへ接続していたかを知りたいなら、プロセスやネットワークの管理構造を調べる。
 
 | 調査目的 | 作業内容                  | 主なツール                              |
 | ------------------------------ | ------------------- | ---------------------------------- |
@@ -145,8 +145,7 @@ Fast Startup設定時に保存されたhiberfil.sysは、ユーザーセッシ�
 | メモリ上のファイルを抽出したい | ファイルオブジェクト、キャッシュの解析 | Volatility、MemProcFS |
 | 管理構造が失われたファイルを抽出したい | カービング | foremost、scalpel、PhotoRec、bulk_extractor-rec |
 
-本稿では、バイナリとしての解析、OSの管理構造に沿った解析の2軸で解説する。  
-どちらかをやればいいというものではなく、見つけた情報は適宜整理して別の調査に役立てるとよい。
+本稿では、まずメモリイメージから文字列やファイルを探す方法を、次にOSの管理構造をたどる方法を紹介する。
 
 
 ### 環境構築
@@ -159,7 +158,7 @@ Fast Startup設定時に保存されたhiberfil.sysは、ユーザーセッシ�
 
 バイナリの構造を眺めるというよりは、正体不明のドデカバイナリから可読文字列をダンプして、とりあえずわかることを列挙する、的なアプローチ。
 
-簡単にできるが、それがどういう性質のもので、調査において何を示すのか？というのは前後の文字列から仮説を立てるしかない。  
+手軽にできるが、文字列が出てきただけでは、どのプロセスが何のために使ったものなのかまでは分からない。前後の文字列などからアタリをつけていく。
 マルウェアの名前が見つかった！と思っても、よくよく見ると定義ファイルのキャッシュかなにかだったりすることもよくある。多少疑ってかかるくらいの勢いで読もう。
 
 ### 文字列抽出
@@ -180,12 +179,12 @@ $ strings -a -n 8 -t x memory.raw > memory-strings-ascii.txt
 $ strings -a -n 8 -t x -e l memory.raw > memory-strings-utf16le.txt
 ```
 
-`-t x` を付けておくと、文字列が見つかったファイルオフセットも残る。あとで元のメモリイメージへ戻って周辺を確認したいときに便利。
-Sysinternals Stringsでは`-o`でオフセットを付けられる。GNU Stringsの`-e l`は入力をUTF-16LEとして読む指定で、日本語なども含めたUnicode文字列を網羅的に抽出できるわけではない。
+`-t x` を付けておくと、文字列が見つかったファイルオフセットも残る。あとで元のメモリイメージへ戻って周辺を確認したいときに便利。  
+`-e l`は入力をUTF-16LEとして読む指定。
 
 #### 出力の圧縮
 
-メモリ全体から文字列を抽出すると、テキストファイルだけで数GBを超える。x100台とかになると手元の機器に置いとくのは厳しいとなるかも。テキストは圧縮がよく効くので、gzipに流したっていい。
+メモリ全体から文字列を抽出すると、テキストファイルだけで数GBを超える。x100台とかになると手元の機器に置いとくのは厳しいかも。テキストは圧縮がよく効くので、gzipに流したっていい。
 
 ```bash
 $ strings -a -n 8 -t x memory.raw | gzip -c > memory-strings-ascii.txt.gz
@@ -205,14 +204,15 @@ Windowsの標準環境にはgzipコマンドがないので、出力後に [7-Zi
 Linuxなら `pv` から入力ファイルを読み込ませると、処理済みサイズ、転送速度、進捗率、残り時間の目安を確認できる。
 
 ```bash
-$ pv memory.raw | strings -a -n 8 -t x > memory-strings-ascii.txt
+$ strings -a -n 8 -t x memory.raw | pv | gzip -c > memory-strings-ascii.txt.gz
 ```
 
-Windowsの標準環境にはそんなものない。追加ツールを入れないなら諦めよう。
+Windowsにはそんなものない。諦めよう。
+
 
 ### 文字列検索
 
-既知の不審なドメインやファイル名などのIOC（侵害の痕跡を探すための指標）がある場合は、その値を検索する。以下の`strings.txt`は、前の手順で抽出したテキストファイルに置き換える。
+既知の不審なドメインやファイル名などのIOC（侵害の痕跡を探すための指標）がある場合は、その値を検索する。
 grepでもいいが、[ripgrep](https://github.com/burntsushi/ripgrep) のほうが爆速。
 
 ```bash
@@ -224,12 +224,12 @@ $ rg -i -F 'malicious.example.com' strings.txt
 | オプション | 説明 |
 | --- | --- |
 | `-i` | 大文字・小文字を区別しない |
-| `-F` | 正規表現ではなく固定文字列として検索する。ドメインの`.`などもそのまま扱う |
-| `-f FILE` | 検索パターンをファイルから1行ずつ読み込む。IOCをまとめて検索するときに便利 |
+| `-F` | 正規表現ではなく固定文字列として検索する。 |
+| `-f FILE` | 検索パターンをファイルから1行ずつ読み込む。IOCをまとめて検索するなど |
 | `-A NUM` | 一致した行の後ろを指定行数表示する |
 | `-B NUM` | 一致した行の前を指定行数表示する |
 | `-C NUM` | 一致した行の前後をそれぞれ指定行数表示する |
-| `-o` | 行全体ではなく、一致した部分だけを表示する |
+| `-o` | 一致した部分だけを表示する |
 
 例えば、IOCを1行に1件ずつ書いた`ioc.txt`があるなら、下記のように前後3行と合わせて確認できる。  
 ただし、物理メモリ上で近くにある文字列が、同じプロセスや同じ時点のデータとは限らないので注意。
@@ -245,15 +245,15 @@ $ rga -i -F 'malicious.example.com' strings.txt.gz
 ```
 
 
-#### langscan
+#### langscanによる異言語検索
 
-[langscan](https://github.com/sumeshi/langscan) を使うと、UTF-8テキストから英語以外の文字列を検索できる。必要に応じてUTF-8へ変換してから渡す。
+[langscan](https://github.com/sumeshi/langscan) を使うと、UTF-8テキストからキリル文字や日本語など、指定した言語で使われる文字を検索できる。必要に応じてUTF-8へ変換してから渡す。
 
 ```bash
 $ langscan strings-utf8.txt
 ```
 
-キリル文字だけひっかけたいな～というときには次のようにかけばよい。
+キリル文字だけひっかけたいな～というときには次のように書けばよい。
 
 ```bash
 $ langscan --lang ru strings-utf8.txt
@@ -263,7 +263,7 @@ exeファイル内に多言語対応処理が書かれている関係でノイ�
 後述のように、プロセス単位でダンプされたメモリなど狭い範囲で使うか、ざっと絞り込みたいときに使えば良い。
 
 
-#### bstrings
+#### bstringsによるパターン検索
 
 [bstrings](https://github.com/EricZimmerman/bstrings) を使えば、よく使われる正規表現パターンで文字列の検索が可能。
 パターン一覧は以下のように確認する。
@@ -284,7 +284,7 @@ exeファイル内に多言語対応処理が書かれている関係でノイ�
 | パターン名     | 説明                                   |
 | --------- | ------------------------------------ |
 | b64       | Base64文字列                            |
-| bitcoin   | BitCoinウォレットアドレス                     |
+| bitcoin   | Bitcoinウォレットアドレス                     |
 | bitlocker | BitLocker回復キー                        |
 | cc        | クレジットカード番号                           |
 | email     | メールアドレス                              |
@@ -292,15 +292,15 @@ exeファイル内に多言語対応処理が書かれている関係でノイ�
 | ipv4      | IPアドレスバージョン4                         |
 | ipv6      | IPアドレスバージョン6                         |
 | mac       | MACアドレス                              |
-| reg_path  | レジストリハイブに関連するPath                    |
-| sid       | Microsoft Security Identifiers (SID) |
-| unc       | UNC Path                             |
+| reg_path  | レジストリハイブに関連するパス                    |
+| sid       | セキュリティ識別子（SID） |
+| unc       | UNCパス                             |
 | url3986   | RFC 3986準拠URL                        |
-| win_path  | Windows Path                         |
-| zip       | ZIPコード                               |
+| win_path  | Windowsファイルパス                         |
+| zip       | 米国郵便番号（ZIPコード）                               |
 
 
-#### bulk_extractor
+#### bulk_extractorによるパターン検索
 
 IOCがまだ分からない段階では、[bulk_extractor](https://github.com/simsong/bulk_extractor)でURL、メールアドレスなどを一括抽出できる。ファイルシステムを解釈せず入力をバイト列として走査するため、メモリイメージも入力にできる。
 
@@ -319,8 +319,8 @@ $ bulk_extractor -o ./bulk memory.raw
 | ip.txt           | IPアドレス                             |
 | telephone.txt    | 米国および国際電話番号                        |
 | url.txt          | URL                                |
-| url_searches.txt | インターネット検索された用語。結構役に立つ率が高い。         |
-| wordlist.txt     | 抽出されたすべての単語リスト。パスワードクラックなどに有用。     |
+| url_searches.txt | URLから抽出したインターネット検索語。結構役に立つ率が高い。         |
+| wordlist.txt     | 単語候補のリスト。パスワードクラックなどに有用。     |
 | zip.txt          | ZIPファイルに関する情報。Office形式などもzipなので有用。 |
 
 こうやって見つけた情報はまた別のところでも使うのでちゃんと整理しておきましょうネ。うまいこと一般化すれば強力な武器にもなる。
@@ -330,19 +330,19 @@ $ bulk_extractor -o ./bulk memory.raw
 
 単純な検索では引っかからない場合や、マルウェアファミリはわかってるんだけどどう検索していいかわからない場合は[YARA](https://github.com/VirusTotal/yara) を使えばいい。
 
-`{malware-family} yara rule` とかでググるとたくさん出てくる。必要に応じてカスタムしながらつかうこと。ベーシックなルールセットはこれ。[yara-rules/rules](https://github.com/yara-rules/rules)
+`{malware-family} yara rule` とかでググるとたくさん出てくる。必要に応じてカスタムしながら使うこと。ルール集ならこの辺。[yara-rules/rules](https://github.com/yara-rules/rules)
 
 Rust実装の [YARA-X](https://github.com/virustotal/yara-x) のほうが最近は開発が盛ん。ただし、一部のモジュールに依存したルールなどは動かないので注意。
 
 
 ### ファイルカービング
 
-ファイルヘッダの構造や、レコードの特徴からファイルあるいはその断片を探すカービングをしてもよい。
-ただし、ファイル全体が読み込まれていない、仮想的には連続する領域に記録されていても、物理的には領域が離れているなどの要因で、不完全な復元となるケースが多い。画像ファイルの一部でも出てきたら儲けたな、ぐらいの期待度で。
+ファイルヘッダやレコードの特徴を頼りに、ファイルやその断片を探す方法をカービングという。
+メモリでは、ファイルの一部しか読み込まれていなかったり、物理的に離れたページに分かれていたりするので、不完全な復元となるケースが多い。画像ファイルの一部でも出てきたら儲けたな、ぐらいの期待度で。
 
 #### foremost
 
-[foremost](https://github.com/korczis/foremost)は、ヘッダやフッタなどの特徴を使ってファイルを回収するツール。たとえばJPEGとPNGを探すなら、形式を絞って次のように実行する。
+老舗ツール。[foremost](https://github.com/korczis/foremost)は、ヘッダやフッタなどの特徴をもとにファイル抽出する。JPEGとPNGを探すなら次のように実行する。
 
 ```bash
 $ foremost -t jpg,png -i memory.raw -o out
@@ -351,7 +351,7 @@ $ foremost -t jpg,png -i memory.raw -o out
 
 #### scalpel
 
-[scalpel](https://github.com/sleuthkit/scalpel)も、ファイルの特徴を定義してカービングするツール。foremostベースにカスタムされたやつ。
+[scalpel](https://github.com/sleuthkit/scalpel)も有名。foremostをベースに改良されたやつ。
 
 ```bash
 $ scalpel -c scalpel.conf -o scalpel-out memory.raw
@@ -363,10 +363,10 @@ $ scalpel -c scalpel.conf -o scalpel-out memory.raw
 
 #### PhotoRec
 
-[PhotoRec](https://photorec.io/) は前述の2つより開発が盛ん。    
-アイコンが怪しいが、[Autopsy](https://sleuthkit.org/autopsy/docs/user-docs/4.20.0/photorec_carver_page.html) にもモジュールが取り込まれている実績もある。対応フォーマットは400種類以上あるとか。
+[PhotoRec](https://www.cgsecurity.org/wiki/PhotoRec) も定番。  
+アイコンが怪しいが、[Autopsy](https://sleuthkit.org/autopsy/docs/user-docs/4.20.0/photorec_carver_page.html) にも組み込まれている。対応フォーマットは400種類以上あるとか。
 
-qphotorec_win.exeを使うとGUI版を起動できる。
+TestDiskに同梱されているので、ダウンロードして`qphotorec_win.exe`を起動するとGUI版が使える。
 
 
 #### bulk_extractor-rec
@@ -383,9 +383,10 @@ PhotoRecなどで抽出できなかったイベントログなどもかなり引
 
 あやしいプロセスの名前などが分かっている場合はその実行有無を調べればいいし、候補がなければプロセス一覧、コマンドライン、通信先などをひととおり出力しておいて後でゆっくり読めばいい。
 
-一般的には、[MemProcFS](https://github.com/ufrisk/memprocfs)とVolatilityが有名。
+[MemProcFS](https://github.com/ufrisk/memprocfs)とVolatilityが有名。
 
-SANSの [Memory Forensics Cheat Sheet](https://www.sans.org/posters/memory-forensics) も参考になるので読んでも良い。
+SANSの [Memory Forensics Cheat Sheet](https://www.sans.org/posters/memory-forensics) も手元にあると便利。
+
 
 ### MemProcFS
 
@@ -405,13 +406,12 @@ Windowsでは [Wiki](https://github.com/ufrisk/MemProcFS/wiki) に従ってDokan
 
 | モード | 意味                                                   |
 | --- | ---------------------------------------------------- |
-| 1   | インメモリで動くSQLite、ファイルとしては残らない                          |
-| 2   | MemProcFS終了時に削除されるSQLite、ファイルとして残すが自動削除              |
-| 3   | MemProcFS終了時も保持されるSQLite、ファイルとして残す                   |
-| 4   | MemProcFS終了時も保持されるSQLite、ファイルとして残す（固定名: vmm.sqlite3） |
+| 1   | メモリ上だけにSQLiteデータベースを作成 |
+| 2   | 一時ファイルに作成し、MemProcFS終了時に削除 |
+| 3   | 一時ファイルに作成し、MemProcFS終了後も保持 |
+| 4   | 固定名のファイル（`vmm.sqlite3`）に作成し、MemProcFS終了後も保持 |
 
-データベースの保存場所は`M:\forensic\database.txt` にかかれている。
-私の場合は下記だった。
+データベースの保存場所は`M:\forensic\database.txt`に書かれている。私の場合は下記だった。
 
 ```
 C:\Users\example\AppData\Local\Temp\vmm.sqlite3
@@ -419,27 +419,28 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 
 解析の進捗状況は `M:\forensic\progress_percent.txt` に記録されるので、100になるまで待ってから、結果を確認する。
 
-同時期に取得したpagefileがあるなら、対応する番号で追加できる。
-デフォルトのWindows10では、各ページファイルにインデックス番号が振られており、pagefile.sysは0, swapfile.sysは1が割り当てられている。
-ページファイルを追加・変更した環境では番号が異なる場合があるので、対象環境の構成も確認する。
+同時期に取得したページファイルがあるなら、対応する番号で追加できる。
+
+各ページファイルにはインデックス番号が振られており、Windows 10の標準構成では`pagefile.sys`に0、`swapfile.sys`に1が割り当てられる。
+ページファイルを追加・変更した環境では番号が異なる場合があるので、対象環境の構成も確認しておく。
 
 ```powershell
 > .\MemProcFS.exe -device C:\Cases\memory.raw -pagefile0 C:\Cases\pagefile.sys -pagefile1 C:\Cases\swapfile.sys -mount M -forensic 4
 ```
 
-この2つの起動例は、pagefileの有無に応じて選ぶ。
+マウントすると、次のようなフォルダが見える。
 
 | フォルダ     | 説明                                                                                                                                                                                                  |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | conf     | MemProcFSの状態と構成設定                                                                                                                                                                                   |
 | forensic | フォレンジック関連情報、めちゃ重要。                                                                                                                                                                                  |
-| misc     | その他プラグインに関連する項目。物理アドレスから仮想アドレスを検索する[phys2virt](https://github.com/ufrisk/MemProcFS/wiki/FS_Phys2Virt)や、Bitlockerキーを復元する[bitlocker](https://github.com/ufrisk/MemProcFS/wiki/FS_BitLocker)などが置かれている。 |
+| misc     | その他プラグインに関連する項目。物理アドレスから仮想アドレスを検索する[phys2virt](https://github.com/ufrisk/MemProcFS/wiki/FS_Phys2Virt)や、BitLockerキーを復元する[bitlocker](https://github.com/ufrisk/MemProcFS/wiki/FS_BitLocker)などが置かれている。 |
 | name     | プロセス情報（名前ごと）                                                                                                                                                                                        |
 | pid      | プロセス情報（プロセスIDごと）                                                                                                                                                                                    |
 | py       | Pythonプラグイン関連。[pypykatz regsecrets](https://github.com/ufrisk/MemProcFS-plugins)プラグインとか入れるとここに表示される。                                                                                                |
 | registry | レジストリハイブ。ページングなどによって破損している場合もある。                                                                                                                                                                    |
 | sys      | OS、ユーザー、プロセス、ネットワークなど、システム全体の情報。 |
-| vm       | Hyper-Vベースの技術（VM, Sandbox, WSL2, VMware/VirtualBox）などが検知されるとそれを解析することができる                                                                                                                           |
+| vm       | 検出されたHyper-V仮想マシン、Windows Sandbox、WSL2など。VMware / VirtualBoxはHyper-V上で動作する構成が対象 |
 
 主要なところだけさらっと。
 
@@ -450,11 +451,11 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 ![[Pasted image 20261003182724.png]]
 
 タイムゾーンやバージョン情報、コンピュータ名などなど。
-あとは proc/proc.txt あたりを見るとプロセスツリーが見れる。
+あとは`proc/proc.txt`あたりを見るとプロセスツリーが見れる。
 
 ![[Pasted image 20261003182836.png]]
 
-同様に、users/users.txtでユーザ一覧、tasks/tasks.txtでタスク一覧、net/netstat.txtで通信状況などが見れる。一通り見てからアタリをつけて掘り下げ調査をやるといい感じ。
+同様に、`users/users.txt`でユーザー一覧、`tasks/tasks.txt`でスケジュールされたタスク一覧、`net/netstat.txt`でネットワーク接続などが見れる。一通り見てからアタリをつけて掘り下げるといい感じ。
 
 #### forensic
 
@@ -464,12 +465,11 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 
 とりあえず見るべきは `csv`, `files`, `ntfs` あたりかな。
 
-[csv](https://github.com/ufrisk/MemProcFS/wiki/FS_Forensic_CSV) には名前の通り様々な視点で整理したファイルがcsvで置かれている。Timeline Explorerなどが見やすい。
-`findevil` や `yara` などの情報もカバーされているので、別ディレクトリをわざわざ見なくてもよい。
+[csv](https://github.com/ufrisk/MemProcFS/wiki/FS_Forensic_CSV)には、プロセスやネットワーク接続などの解析結果がCSVで置かれている。Timeline Explorerなどで開くと見やすい。
+`findevil`や`yara`の検出結果もまとまっているので、まずここから眺めると楽。
 
-たとえば、`M:\forensic\files\files.txt`なら復元候補のファイル一覧を見ることができる。
-気になるものがあれば復元しよう。
-ファイルの実体は `files` から持ってくれば良い。Windowsのフォルダ構造そのままなので使いやすい。NTFSの構造上、サイズの小さいファイルはMFT側に直接記録されていることがある。その場合は `ntfs` 側にあるかもしれない。
+`M:\forensic\files\files.txt`には復元されたファイルの一覧がある。気になるものがあれば、`files`配下からもらってきて分析しましょう。元パスと同様にフォルダが再構成されているので探しやすい。
+NTFSでは、サイズの小さいファイルの内容がMFTレコード内に直接記録されることがある。`files`に見当たらなければ、`ntfs`側を見るとよいかもしれない。
 
 ![[Pasted image 20261003180220.png]]
 
@@ -481,17 +481,19 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 
 ![[Pasted image 20261003180652.png]]
 
-基本情報は名前のとおり。name-longがプロセス名、pidがプロセスID、ppidは親のプロセスID、time-createはプロセス起動時間、win-cmdlineは起動時コマンド、win-environmentは環境変数。気になるなら見てみれば良い。
+`name-long`がプロセス名、`pid`がプロセスID、`ppid`が親のプロセスID、`time-create`が作成時刻、`win-cmdline`がコマンドライン、`win-environment`が環境変数。名前の通り。
 
-プロセス内で重要なのだと、`files/handles` とか？プロセスが開いているファイルハンドルを手掛かりに再構築されたファイル。
+まず見たいのは`files/handles`あたり。プロセスが開いているファイルハンドルを手掛かりに再構築されたファイルがある。
 `files/modules` はメモリ上のモジュールから再構築されたexeやdllなど。`files/vads` はVAD（Virtual Address Descriptor）を手掛かりに再構築されたファイル。VADは、プロセスの仮想メモリ領域と、その保護属性や対応するファイルなどを管理する構造である。
 
-どの場所から回収した場合も、ファイル全体がメモリに残っているとは限らない。パーサで読めるかを確認し、欠損やエラーも記録しておく。
+どの場所から回収した場合でも、ファイル全体がメモリに残っているとは限らない。そのまま読めれば嬉しい。
 
 .evtxで検索するとイベントログが見つかったりする。ディスク側で削除されていても一部イベントの復元ができるかも。見つけたら[調査してみるとよい](https://sumeshi.github.io/posts/knowledges/windows-eventlog-analysis-101) 。
+
 ![[Pasted image 20261003181311.png]]
 
 ![[Pasted image 20261003181432.png]]
+
 
 #### registry
 
@@ -504,9 +506,10 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 
 レジストリへの変更はメモリ上のハイブに反映され、トランザクションログ（`.LOG1`、`.LOG2`）を使いながらディスクへ書き戻される。そのため、メモリのほうがディスク上にあるものよりも新しい場合もある。見る価値はある。
 
+
 ### Volatility
 
-メモリ調査といえばこれ！のイメージだが、マジで血管がブチ切れるぐらい時間がかかる。ざっと眺めるならMemProcFSのが早い。
+メモリ調査といえばこれ！のイメージだが、プラグインによってはマジで血管がブチ切れるぐらい時間がかかる。ざっと眺めるならMemProcFSのが早い。
 
 とはいえ、こちらのほうがプラグインが充実しているので、処理かけてからご飯食べに行くとかそういう気持ちで。
 
@@ -514,28 +517,27 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 
 Volatility 2と3がよく使われるが、最近のOSなら3でいい。たまに古代の発掘品とかが来たときは2じゃないと動かないときもある。どちらも用意しておくとよい。
 
-また、Volatilityは慣れないと非常に使いづらい（し、3系はインストールも大変）。[Volatility Workbench](https://www.osforensics.com/tools/volatility-workbench.html) や[KaniVola](https://github.com/4n6ist/KaniVola) などのラッパーを使うと非常に楽。コマンドをカチャカチャ打つほうが気持ちいいのはわかるのだが、実際インシデント対応してるときにそんな暇はないことがほとんど。
+また、Volatilityは慣れないと使いづらい。[Volatility Workbench](https://www.osforensics.com/tools/volatility-workbench.html) や[KaniVola](https://github.com/4n6ist/KaniVola) などのラッパーを使うとかなり楽。コマンドをカチャカチャ打つほうが気持ちいいのはわかるのだが、実際インシデント対応してるときにそんな暇はないことがほとんど。
 
-3系ならVolatility Workbenchがすごく使いやすい
+3系ならVolatility Workbenchがすごく使いやすい。
 ![[Pasted image 20261003183952.png]]
 
-2系ならKaniVolaがすごく使いやすい
+2系ならKaniVolaがよい。
 ![[Pasted image 20261003184427.png]]
 
-以下はVolatility 3をコマンドラインから実行する前提として解説する。Volatility Workbenchを使っている場合はコマンドに対応するプラグインを選択すればいい感じにやってくれる。
+以下はVolatility 3をコマンドラインから実行する前提での解説。Volatility Workbenchを使っている場合は、対応するプラグインを選択して、PIDなどのオプションを設定すればよい。
 
-コマンド例の`vol3.py`はVolatility 3を起動するコマンドとして表記している。pipでインストールした環境なら`vol`、ソースから実行するなら`python vol.py`など、自分の環境に合わせて読み替える。プラグイン名やオプションもバージョンによって変わることがあるので、`-h`で確認する。
 
 #### シンボル情報
 
-Volatility 3にはWindowsのシンボルを自動解決する仕組みがあるので、あまり意識しなくても使えるが、MSのサーバに取りに行かなければならないのでインターネット接続が必要である。
+Volatility 3は、Windowsのメモリ内の構造を解釈するためにシンボル情報を使う。必要なシンボルがローカルにない場合はMicrosoftのサーバから自動取得するので、その際にはインターネット接続が必要になる。
 
 私はオフライン絶対至上主義なので、あらかじめシンボル情報をローカルに準備しておく。
 [JPCERT/CC - オフラインでVolatility 3を実行する方法](https://blogs.jpcert.or.jp/ja/2021/08/volatility3_offline.html) が非常に参考になる。
 
 これを自動化するようなスクリプトを書いておくと実際対応するときに助かる。
 
-一方、Volatility 2では `--profile` の指定が必要。間違ったシンボル情報を使うと、一見うまくパースできているように見えて壊れていることがあるので注意。
+一方、Volatility 2では、対象OSに対応する構造体の定義などをまとめたプロファイルを`--profile`で指定する。違うプロファイルを使うと、一見読めているようでも値を誤って解釈することがあるので注意。
 
 #### 基本情報
 
@@ -560,8 +562,7 @@ $ vol3.py -q -f memory.raw windows.cmdline > cmdline.txt
 
 `pslist`はOSが管理するプロセスのリストをたどり、`pstree`は同じ列挙結果を親子関係で表示する。`pstree`も別の方法で隠蔽プロセスを探しているわけではない。
 
-また、親プロセスがすでに終了していたりPIDが再利用されていたりすると、誤った対応付けになることもある。
-作成時刻・終了時刻やプロセスオブジェクトの位置も併せて確認する。
+親プロセスがすでに終了していれば一覧にいないこともあるし、PIDが再利用されていると、同じPIDの別プロセスを親と見誤ることもある。親子関係を読むときは作成時刻も確認する。
 
 `psscan`は、カーネルがメモリを割り当てるpool領域を走査してプロセスの構造体を探すため、終了済みあるいは隠蔽されたプロセスも検出できる場合があるが、時間がかかる。裏で実行しながらコーヒー飲んでpslistとかを眺めておけば良い。
 
@@ -569,18 +570,16 @@ $ vol3.py -q -f memory.raw windows.cmdline > cmdline.txt
 $ vol3.py -q -f memory.raw windows.psscan > psscan.txt
 ```
 
-psxviewを使うと、複数のプロセス列挙方法の結果を突合してくれる。
-pslistにはないけどpsscanにはあった、とか。
+`psxview`を使うと、複数のプロセス列挙方法の結果を突合してくれる。`pslist`にはないけど`psscan`にはあった、とか。
 
 ```bash
 $ vol3.py -q -f memory.raw windows.malware.psxview > psxview.txt
 ```
 
-ただし、列挙方法ごとに終了済みプロセスの扱いも違うので、結果が食い違うだけで隠蔽と決めつけない。PID（プロセスID）、作成・終了時刻、プロセスオブジェクトの位置を突き合わせて候補を絞る。
 
 #### プロセスの詳細
 
-候補をPID `4240`に絞れたら、そのプロセスが何を読み込み、何を参照していたかを調べる。ハンドルはファイル、レジストリキー、他のプロセスなどのオブジェクトを参照するための識別子で、調査対象を広げる手掛かりになる。
+候補をPID `4240`などに絞れたら、そのプロセスが何を読み込み、何を参照していたかを調べる。ハンドルはファイル、レジストリキー、他のプロセスなどのオブジェクトを参照するための識別子で、調査対象を広げる手掛かりになる。
 
 ```bash
 $ vol3.py -f memory.raw windows.cmdline --pid 4240
@@ -591,6 +590,7 @@ $ vol3.py -f memory.raw windows.handles --pid 4240
 `dlllist`で読み込まれたDLLのパスや配置を確認し、`handles`で参照しているファイルやレジストリキーなどを確認する。カーネルのモジュールを列挙する`windows.modules`とは、調べる対象が異なる。
 
 例えばコマンドラインに一時ディレクトリ上のスクリプトがあれば、そのファイル名を検索や回収の対象にする。ハンドルに文書のパスがあれば、関連するファイルやアクセスの痕跡をディスク側でも確認する。ハンドルの存在だけでは、ファイルの全内容を読んだことや外部へ送信したことまでは分からない。
+
 
 #### コマンド履歴
 
@@ -607,7 +607,6 @@ $ vol3.py -q -f memory.raw windows.cmdscan > cmdscan.txt
 ネットワークの管理構造を調べるなら`netscan`を使う。
 
 ```bash
-$ mkdir -p out
 $ vol3.py -q -f memory.raw windows.netscan > netscan.txt
 ```
 
@@ -615,6 +614,7 @@ $ vol3.py -q -f memory.raw windows.netscan > netscan.txt
 
 また、`netscan`から通信内容や転送量は得られない。  
 接続先との実際のやり取りを確認するなら、メモリだけでなくプロキシ、DNS、ファイアウォール、EDRなどの記録へ調査を広げる必要がある。
+
 
 #### 不審な実行領域
 
@@ -643,39 +643,42 @@ $ vol3.py -f memory.raw windows.vadyarascan --yara-file ioc.yar
 
 #### PEとメモリの抽出
 
-実行ファイルの解析に渡したいのか、ヒープなども含めて文字列を探したいのかで、抽出方法を変える。
+実行ファイルをPE形式で取り出したいのか、ヒープなども含めて文字列を探したいのかで、抽出方法を変える。  
+出力先フォルダはあらかじめ作っておくこと。
 
 ```bash
+$ mkdir -p 4240/pe 4240/pages out/suspicious
+
 # プロセスの実行イメージをPEとしてダンプ
-$ vol3.py -f memory.raw -o pe windows.pslist --pid 4240 --dump
+$ vol -f memory.raw -o 4240/pe windows.pslist --pid 4240 --dump
 
 # 読み取り可能なプロセスメモリを抽出し、アドレスとの対応を保存する
-$ vol3.py -q -f memory.raw -o pages windows.memmap --pid 4240 --dump > memmap-4240.txt
+$ vol -q -f memory.raw -o 4240/pages windows.memmap --pid 4240 --dump > memmap-4240.txt
 
 # malfindによって検出された領域を抽出する
-$ vol3.py -f memory.raw -o suspicious windows.malware.malfind --pid 4240 --dump
+$ vol -f memory.raw -o 4240/suspicious windows.malware.malfind --pid 4240 --dump
 ```
 
-ダンプしたPEは通常、もとのPEファイルと同一ではないので、ハッシュ値を求めてVirusTotalなどで検索することはできない。
+ダンプしたPEは通常、もとのPEファイルと同一ではないので、VirusTotalなどでハッシュ値からもとの検体を同定することはできない。  
 実行することも難しい。 ~~やるならIAT再構築などをする必要があるが、ここでは取り扱わない。~~
 
-が、前述の文字列抽出やYARAによるスキャンによって解析のヒントが得られることもある。
+それでも、前述の文字列抽出やYARAによるスキャンから解析のヒントが得られることはある。
 
 [FLOSS](https://github.com/mandiant/flare-floss) は、実行ファイルのコードを解析し、難読化されていた文字列や、実行時に組み立てられる文字列の抽出を試みるツール。  
 通常のstringsでは出てこない文字列を探したいときに有用。
 
-入力には、回収したPEを指定する。次の`recovered.exe`は、その回収ファイルの例。
+入力にはダンプしたPEを指定する。欠損やヘッダの破損があると、FLOSS側で解析できないこともある。
 
 ```bash
 $ floss recovered.exe
 ```
 
 
-#### ファイルの回収
+#### ファイルの復元
 
-メモリには、プロセスが使用したファイルやOSのキャッシュも残る。調査対象のファイル名やパスが分かれば回収を試し、得られた内容をその形式に対応するパーサへ渡せる。
+メモリには、プロセスが使用したファイルやOSのキャッシュも残る。調査対象のファイル名やパスが分かれば復元を試し、得られた内容をその形式に対応するパーサへ渡せる。
 
-`filescan`は、Windowsがファイルを管理する`FILE_OBJECT`を走査する。まずファイル名から候補を探し、そのオブジェクトに対応する内容を`dumpfiles`で回収する。
+`filescan`は、Windowsがファイルを管理する`FILE_OBJECT`を走査する。まずファイル名から候補を探し、そのオブジェクトに対応する内容を`dumpfiles`で復元する。
 
 ```bash
 $ vol3.py -q -f memory.raw windows.filescan > filescan.txt
@@ -684,7 +687,8 @@ $ vol3.py -q -f memory.raw windows.filescan > filescan.txt
 次はWindows 10 / 11を対象に、見つかった`FILE_OBJECT`の仮想アドレスを指定する例である。アドレスは実際の出力に置き換える。
 
 ```bash
-$ vol3.py -f memory.raw -o cache windows.dumpfiles --virtaddr 0xffff800012345670
+$ mkdir -p out/cache
+$ vol -f memory.raw -o out/cache windows.dumpfiles --virtaddr 0xffff800012345670
 ```
 
 `--virtaddr`と`--physaddr`は、それぞれ`FILE_OBJECT`の仮想アドレスと物理アドレスを受け取る。
@@ -692,26 +696,26 @@ $ vol3.py -f memory.raw -o cache windows.dumpfiles --virtaddr 0xffff800012345670
 プロセスとの関連が分かっていれば、PIDを指定して回収候補を絞ることもできる。
 
 ```bash
-$ vol3.py -f memory.raw -o out/cache windows.dumpfiles --pid 4240
+$ vol -f memory.raw -o out/cache windows.dumpfiles --pid 4240
 ```
 
 `filescan`で名前が見つかっても、ファイル内容がしっかり残っているとは限らない。
-欠落しているならば部分的な復元として文字列検索したりいろいろすればよい。
+パーサで開けなければ、部分的に回収できたデータとして文字列検索やカービングに回してみる。
 
 
 ## 調査結果の整理
 
-メモリフォレンジックをしていると、ファイルがグチャグチャになりがちなので、フォルダをいい感じに整理しておくとよい。
-MemProcFSであれば、タイムラインとして整理された情報を出力してくれるので一通りコピーしておく。
+メモリフォレンジックをしていると、ファイルがグチャグチャになりがち。ホストや取得プロセスごとにフォルダを分け、いい感じに整理しておくとよい。
+MemProcFSであれば、タイムラインやCSVも出力してくれるので、アンマウントする前にそのあたりも一通りコピーしておく。
 
 整理は本当に大変なので、面倒なら[AIにぶん投げても良い](https://sumeshi.github.io/posts/works/dont-make-ai-your-forensic-analyst)と思う。
 
 ツールによって結果の食い違いが発生することもままある。  
-誤りと決めつけずに、出力時の機能がメモリの何をみてその結果を出力したのか？というのを意識しながら検証すること。列挙する管理構造、終了済みオブジェクトの扱い、欠損ページの処理など。。
+どちらかが間違っていると決めつける前に、各ツールが何をたどって列挙しているかを確認する。参照する管理構造や、終了済みオブジェクト・欠損ページの扱いが違えば、結果も変わる。
 
 
 ## おわりに
 
-メモリフォレンジックでは、ディスクフォレンジックと比較して破損したデータを扱う機会が非常に多くなります。それをどう活かすかというのは中身を見てアタリをつける経験とセンスになってくるのでなんとも言えないのですが、困ったらとりあえず文字列として解釈してみるとか、GIMPに突っ込んで画像として見てみるとか、マジに困ったらAIを頼ってもいいと思います。
+メモリフォレンジックでは、ディスクフォレンジックと比較して欠けたり壊れたデータを相手にすることが多い。それをどう活かすかというのは、中身を見てアタリをつける経験とセンスになってくるのでなんとも言えないが、困ったらとりあえず文字列として読んでみるとか、画像の断片っぽければGIMPに突っ込んでみるとか。マジに困ったらAIを頼ってもいいと思います。
 
 メモリフォレンジックなんて人間がやることではない。
