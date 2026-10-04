@@ -1,5 +1,5 @@
 # a tale of volatile memories.
-Windows is the only one in the world. That made Windows the god of this world.
+Windows is only one in the world. That made Windows the god of this world.
 
 > **Note:** This is the English translation of the Japanese original. The Japanese version is available at https://sumeshi.github.io/posts/knowledges/windows-memory-forensics-101.
 
@@ -130,7 +130,7 @@ The main outputs are:
 | Output | Contents and uses |
 | --- | --- |
 | `ActiveMemory.bin` | Decompressed and reconstructed memory; pass it to a compatible memory analysis tool |
-| `RawSlackChunks/` | Slack outside the currently valid saved data; you can try string searches or carving against it |
+| `RawSlackChunks/` | Slack space outside the currently valid hibernation data; you can try string searches or carving against it |
 | `HibRec.log` | Processing log, including errors |
 
 Keep in mind that a `hiberfil.sys` written during a Fast Startup shutdown [doesn't contain the full user sessions](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states), so it doesn't give you the same coverage as a live memory capture.
@@ -175,7 +175,7 @@ It's easy to get started, but finding a string doesn't tell you which process us
 
 ### Extracting Strings
 
-First things first: extract some damn strings.
+First things first: dump some strings.
 
 I recommend [Sysinternals Strings](https://learn.microsoft.com/en-us/sysinternals/downloads/strings), which extracts both ASCII and Unicode strings by default.
 A minimum string length of 6 or 8 with `-n` is a reasonable starting point. Adjust it if you're not finding anything.
@@ -219,7 +219,7 @@ On Linux, feed the input through `pv` to see the amount processed, throughput, p
 $ pv memory.raw | strings -a -n 8 -t x | gzip -c > memory-strings-ascii.txt.gz
 ```
 
-Windows doesn't come with that. Tough luck.
+Windows doesn't come with an equivalent. Oh well.
 
 
 ### Searching Strings
@@ -311,11 +311,11 @@ The main outputs are listed below. Which files appear depends on the enabled sca
 | ip.txt | IP addresses |
 | telephone.txt | US and international telephone numbers |
 | url.txt | URLs |
-| url_searches.txt | Web search terms extracted from URLs. These turn out to be useful surprisingly often. |
+| url_searches.txt | Web search terms extracted from URLs. These are surprisingly useful. |
 | wordlist.txt | Candidate words, useful for password cracking and similar tasks |
 | zip.txt | Information about ZIP files. Useful for Office documents too, since many Office formats are ZIP-based. |
 
-You'll use these findings in other searches and when investigating processes, so keep them organized. Turn them into useful patterns and they can become a pretty powerful tool for other investigations.
+You'll use these findings in other searches and when investigating processes, so keep them organized. Generalize them into reusable patterns, and they can become powerful tools for future investigations.
 
 
 #### Finding Other Scripts and Languages with langscan
@@ -342,7 +342,7 @@ If a simple string search isn't finding what you need, or you know the malware f
 
 Google something like `{malware-family} yara rule` and you'll find plenty. Customize the rules as needed. For a rule collection, try [yara-rules/rules](https://github.com/yara-rules/rules).
 
-The Rust implementation, [YARA-X](https://github.com/virustotal/yara-x), has been seeing more active development lately. Just watch out for rules that depend on modules it doesn't support.
+The Rust implementation, [YARA-X](https://github.com/virustotal/yara-x), has seen more active development recently. Just watch out for rules that depend on modules it doesn't support.
 
 
 ### File Carving
@@ -362,7 +362,7 @@ $ foremost -t jpg,png -i memory.raw -o out
 
 #### scalpel
 
-[scalpel](https://github.com/sleuthkit/scalpel) is another well-known choice, built on and improved from foremost.
+[scalpel](https://github.com/sleuthkit/scalpel) is another well-known choice that builds on and improves upon foremost.
 
 Make a working copy of the supplied `scalpel.conf`, then uncomment only the format definitions you want to search for. They're all disabled in the default configuration, so do this before running it.
 
@@ -395,7 +395,7 @@ It can pick up quite a few event logs and other artifacts that PhotoRec missed.
 
 Next, we follow the OS's data structures. This lets us connect leads from string searches and other methods to processes and network connections.
 
-If you already know the name of a suspicious process, check whether it ran. If you don't have any candidates, dump the process lists, command lines, and network connections first, then read through them at your leisure.
+If you already know the name of a suspicious process, check whether it ran. If you don't have any candidates, dump the process lists, command lines, and network connections first, then review them later for leads.
 
 [MemProcFS](https://github.com/ufrisk/memprocfs) and Volatility are the usual names here. We'll use both in the following sections. The SANS [Memory Forensics Cheat Sheet](https://www.sans.org/posters/memory-forensics) is also handy to keep nearby.
 
@@ -470,7 +470,7 @@ After checking the basics, look at the process tree in `proc/proc.txt`.
 ![proc](https://github.com/user-attachments/assets/7c4b011d-f64c-4e71-bae3-eee311c4dce5)
 
 Similarly, `users/users.txt` lists users, `tasks/tasks.txt` lists scheduled tasks, and `net/netstat.txt` shows network connections.
-Have a look through everything, pick up a lead, then dig deeper.
+Have a look through everything, find a lead, then dig deeper.
 
 
 #### forensic
@@ -573,7 +573,7 @@ $ vol3.py -q -f memory.raw windows.info > info.txt
 
 #### Listing Processes
 
-Once you can read the basic information, save the running processes, their parent-child relationships, and their command lines.
+Once you can read the basic information, record the running processes, their parent-child relationships, and their command lines.
 
 ```bash
 $ vol3.py -q -f memory.raw windows.pslist > pslist.txt
@@ -611,7 +611,7 @@ $ vol3.py -q -f memory.raw windows.netscan > netscan.txt
 Match the PIDs you find against the process list and creation times, then investigate those processes further. Structures for closed connections or freed objects may survive, so read `State` and `Created` too. `Created` is the network object's creation time.
 
 Keep in mind that `netscan` doesn't tell you the contents of communications or how much data was transferred.
-To work out what actually passed between the endpoints, expand the investigation to proxy, DNS, firewall, EDR, and other records.
+To work out what actually passed between the endpoints, expand the investigation to proxy logs, DNS logs, firewall logs, EDR telemetry, and other sources.
 
 
 #### Examining a Process
@@ -626,7 +626,7 @@ $ vol3.py -f memory.raw windows.dlllist --pid 4240
 $ vol3.py -f memory.raw windows.handles --pid 4240
 ```
 
-Use `dlllist` to examine the paths and locations of loaded DLLs, and `handles` to see referenced files, registry keys, and other objects. This is a different target from `windows.modules`, which lists kernel modules.
+Use `dlllist` to examine the paths and locations of loaded DLLs, and `handles` to see referenced files, registry keys, and other objects. Don't confuse `dlllist` with `windows.modules`, which lists kernel modules.
 
 For example, if the command line mentions a script in a temporary directory, search for or try to recover that file. If a handle points to a document, also check the disk for the file and traces of access. **A handle alone doesn't prove that the process read the entire file or sent it outside the system.**
 
