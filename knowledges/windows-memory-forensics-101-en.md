@@ -135,7 +135,7 @@ The main outputs are:
 
 Keep in mind that a `hiberfil.sys` written during a Fast Startup shutdown [doesn't contain the full user sessions](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states), so it doesn't give you the same coverage as a live memory capture.
 
-Depending on when the machine hibernated, the hibernation file and a live capture may give you both an earlier memory state and a current one. Looking at both lets you compare two points in time instead of staring at a single snapshot.
+Depending on when the machine hibernated, the hibernation file and a live capture may give you both an earlier memory state and a current one. Looking at both lets you [compare two points in time instead of staring at a single snapshot](https://shonenjumpplus.com/episode/13932016480028725371).
 
 
 ## Preparing for Analysis
@@ -333,7 +333,7 @@ $ langscan --lang ru strings-utf8.txt
 ```
 
 Keep in mind that executables often contain multilingual support code and resources, which can produce a lot of noise.
-Use it on a narrower target, such as an individual process memory dump created using the methods discussed later, or as a quick way to narrow things down.
+Try it on strings extracted from a single process's memory dump; we'll cover how to create those dumps later. You can also use it as a quick first pass through a larger set of strings to find leads.
 
 
 ### YARA Searches
@@ -406,7 +406,7 @@ MemProcFS's forensic mode is useful when you want to browse the files and artifa
 
 #### Mounting an Image
 
-On Windows, follow the [Wiki](https://github.com/ufrisk/MemProcFS/wiki) to set up Dokany and the other prerequisites, then mount the image on an unused drive letter, usually `M:`.
+On Windows, follow the [Wiki](https://github.com/ufrisk/MemProcFS/wiki) to set up [Dokany](https://github.com/dokan-dev/dokany/releases) and the other prerequisites, then mount the image on an unused drive letter, usually `M:`.
 
 Enable forensic mode at startup with `-forensic`. This helps make results reproducible for the same image, settings, and MemProcFS version. Enabling it after mounting can produce differences due to caching and processing order.
 
@@ -481,7 +481,7 @@ This contains data organized for forensic analysis.
 
 I'd start with `csv`, `files`, and `ntfs`.
 
-[csv](https://github.com/ufrisk/MemProcFS/wiki/FS_Forensic_CSV) holds analysis results for processes, network connections, and other artifacts as CSV files. Open them in something like Timeline Explorer for easier reading.
+[csv](https://github.com/ufrisk/MemProcFS/wiki/FS_Forensic_CSV) holds analysis results for processes, network connections, and other artifacts as CSV files. Open them in something like [Timeline Explorer](https://www.sans.org/tools/timeline-explorer) for easier reading.
 Results from `findevil` and `yara` are collected here too, making it a convenient starting point.
 
 ![csv](https://github.com/user-attachments/assets/06994dc4-c49f-4ac9-b7bb-ca0af24966d4)
@@ -522,7 +522,7 @@ Registry changes are applied to the in-memory hives and written back to disk usi
 
 ![registry](https://github.com/user-attachments/assets/ad63c942-d688-4e79-a2ca-0093020020d9)
 
-Personally, I find it easier to browse the hive files in something like Registry Explorer. The hives are often broken, though.
+Personally, I find it easier to browse the hive files in something like [Registry Explorer](https://www.sans.org/tools/registry-explorer). The hives are often broken, though.
 
 ![regexp](https://github.com/user-attachments/assets/533a8a97-ae71-4abe-b6a2-8e86bdd6db19)
 
@@ -537,11 +537,11 @@ You'll run into both Volatility 2 and 3. For a recent OS, go with 3. Every now a
 
 Until you're used to Volatility, wrappers such as [Volatility Workbench](https://www.osforensics.com/tools/volatility-workbench.html) and [KaniVola](https://github.com/4n6ist/KaniVola) (documentation in Japanese) make life much easier. I get it, hammering away at commands feels good, but you rarely have that kind of time during an actual incident.
 
-Volatility Workbench is very easy to use with version 3.
+For Volatility 3, Volatility Workbench is very easy to use.
 
 ![vwork](https://github.com/user-attachments/assets/1ccd3179-596f-47e0-ba29-07303ab4128b)
 
-For version 2, KaniVola is a good choice.
+For Volatility 2, KaniVola is a good choice.
 
 ![kanivol](https://github.com/user-attachments/assets/deba30e7-c826-47c6-93a6-04b8d5d574f1)
 
@@ -687,7 +687,7 @@ $ vol3.py -f memory.raw -o 4240/suspicious windows.malware.malfind --pid 4240 --
 ```
 
 A dumped PE usually differs from the original file, so you generally can't identify the original sample by looking up the dump's hash on VirusTotal or a similar service.
-Getting it to run is difficult too. ~~You may need to rebuild the IAT and so on, but that's outside the scope of this article.~~
+Getting it to run is difficult too. ~~You may need to [rebuild the IAT](https://github.com/ntquery/scylla) and so on, but that's outside the scope of this article.~~
 
 Still, applying the string extraction and YARA searches described earlier to the extracted data can give you useful leads.
 
@@ -745,6 +745,6 @@ Organizing all these results is a pain. If you can't be bothered, I think it's f
 
 Compared with disk forensics, memory forensics involves **a lot more incomplete or broken data**. What you can do with it often comes down to experience and a feel for what you're looking at, so I can't give you a neat answer.
 
-When stuck, try a different way of looking at the data you have. Read it as strings, or if it looks like an image fragment, chuck it into GIMP. If you're really stuck, I think asking AI for help is fair game too.
+When stuck, try a different way of looking at the data you have. Read it as strings, or if it looks like an image fragment, chuck it into [GIMP](https://www.gimp.org/). If you're really stuck, I think asking AI for help is fair game too.
 
-Memory forensics really isn't a job for humans.
+Honestly, memory forensics is enough to drive you up the wall.

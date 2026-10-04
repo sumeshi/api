@@ -131,7 +131,7 @@ Magnet RESPONSEの場合、これらの情報はログとして出力してく�
 
 ただし、Fast Startupによるシャットダウン時に保存された`hiberfil.sys`は、[ユーザーセッション全体を含まない](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states)ため、ライブ取得したメモリと同じ範囲を調べられるわけではない。
 
-また、休止状態のタイミングによっては、ライブ取得したメモリと合わせて過去と現在の2つのメモリ状態を手に入れられる。両方を見れば、点ではなく線の解析ができる。
+また、休止状態のタイミングによっては、ライブ取得したメモリと合わせて過去と現在の2つのメモリ状態を手に入れられる。両方を見れば、[点ではなく線の解析](https://shonenjumpplus.com/episode/13932016480028725371)ができる。
 
 
 ## 解析の準備
@@ -330,7 +330,7 @@ $ langscan --lang ru strings-utf8.txt
 ```
 
 ただし、exeファイル内に多言語対応処理が書かれている関係でノイズが非常に多くなったりもする。  
-後述する方法でプロセス単位のメモリをダンプし、そのような狭い範囲で使うか、ざっと絞り込みたいときに使えば良い。
+後述する方法でプロセス単位のメモリをダンプして狭い範囲で使うか、全体からざっと範囲を絞り込みたいときに使えば良い。
 
 
 ### YARA検索
@@ -403,7 +403,7 @@ PhotoRecなどで抽出できなかったイベントログなどもかなり引
 
 #### マウント
 
-Windowsでは [Wiki](https://github.com/ufrisk/MemProcFS/wiki) に従ってDokanyなどを準備し、空いているドライブ(一般的には `M:`)へマウントする。
+Windowsでは [Wiki](https://github.com/ufrisk/MemProcFS/wiki) に従って[Dokany](https://github.com/dokan-dev/dokany/releases)などを準備し、空いているドライブ(一般的には `M:`)へマウントする。
 
 フォレンジックモードは、起動時に`-forensic`をつけて有効にする。こうすることで、同じ入力イメージ・設定・MemProcFSバージョンでの解析結果を再現しやすくなる。マウント後に有効化すると、キャッシュや処理順序の違いから差異が出る可能性がある。
 
@@ -479,7 +479,7 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 
 とりあえず見るべきは `csv`, `files`, `ntfs` あたりかな。
 
-[csv](https://github.com/ufrisk/MemProcFS/wiki/FS_Forensic_CSV)には、プロセスやネットワーク接続などの解析結果がCSVで置かれている。Timeline Explorerなどで開くと見やすい。
+[csv](https://github.com/ufrisk/MemProcFS/wiki/FS_Forensic_CSV)には、プロセスやネットワーク接続などの解析結果がCSVで置かれている。[Timeline Explorer](https://www.sans.org/tools/timeline-explorer)などで開くと見やすい。
 `findevil`や`yara`の検出結果もまとまっているので、まずここから眺めると楽。
 
 ![csv](https://github.com/user-attachments/assets/06994dc4-c49f-4ac9-b7bb-ca0af24966d4)
@@ -520,7 +520,7 @@ C:\Users\example\AppData\Local\Temp\vmm.sqlite3
 
 ![registry](https://github.com/user-attachments/assets/ad63c942-d688-4e79-a2ca-0093020020d9)
 
-ハイブファイルは、個人的にはRegistryExplorerとかで見るほうが見やすい。ただし、壊れていることもよくある。
+ハイブファイルは、個人的には[RegistryExplorer](https://www.sans.org/tools/registry-explorer)とかで見るほうが見やすい。ただし、壊れていることもよくある。
 
 ![regexp](https://github.com/user-attachments/assets/533a8a97-ae71-4abe-b6a2-8e86bdd6db19)
 
@@ -653,7 +653,7 @@ $ vol3.py -f memory.raw windows.malware.malfind --pid 4240
 
 #### プロセス内の検索
 
-一方、前述の文字列検索でドメインが見つかったものの、どのプロセスと関係するか分からない場合は、同じ文字列をYARAルールにしてプロセスの仮想メモリを検索できる。
+一方、前述の文字列検索で怪しいドメインが見つかったものの、どのプロセスと関係するか分からない場合は、同じ文字列をYARAルールにしてプロセスの仮想メモリを検索できる。
 
 ```bash
 $ vol3.py -f memory.raw windows.vadyarascan --yara-file ioc.yar
@@ -683,7 +683,7 @@ $ vol3.py -f memory.raw -o 4240/suspicious windows.malware.malfind --pid 4240 --
 ```
 
 ダンプしたPEは通常、もとのPEファイルと同一ではないので、VirusTotalなどでハッシュ値からもとの検体を同定することはできない。  
-実行することも難しい。 ~~やるならIAT再構築などをする必要があるが、ここでは取り扱わない。~~
+実行することも難しい。 ~~やるなら[IAT再構築](https://github.com/ntquery/scylla)などをする必要があるが、ここでは取り扱わない。~~
 
 それでも、抽出したデータに前述の文字列抽出やYARAによるスキャンをかけることで、解析のヒントが得られることはある。
 
@@ -741,6 +741,6 @@ MemProcFSであれば、タイムラインやCSVも出力してくれるので�
 
 メモリフォレンジックでは、ディスクフォレンジックと比較して**欠けたり壊れたデータを相手にすることが多い**。それをどう活かすかは、中身を見てアタリをつける経験とセンスになってくるのでなんとも言えないな。
 
-困ったら、とりあえず文字列として読んでみるとか、画像の断片っぽければGIMPに突っ込んでみるとか、手元に残ったデータから別の見方を試してみる。マジに困ったらAIを頼ってもいいと思います。
+困ったら、とりあえず文字列として読んでみるとか、画像の断片っぽければ[GIMP](https://www.gimp.org/)に突っ込んでみるとか、手元に残ったデータから別の見方を試してみる。マジに困ったらAIを頼ってもいいと思います。
 
 メモリフォレンジックなんて人間がやることではないな。
