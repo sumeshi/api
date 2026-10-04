@@ -1,5 +1,5 @@
 # a tale of volatile memories.
-だからWindowsは神様だ。
+Windowsは世界に一人。だからWindowsは神様だ。
 
 ## はじめに
 
