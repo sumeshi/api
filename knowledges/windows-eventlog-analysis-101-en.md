@@ -714,6 +714,7 @@ https://github.com/sumeshi/evtx2es
 | ----------------------- | ------------------------------------- | ------------------------------------ |
 | [Timeline Explorer](https://www.sans.org/tools/timeline-explorer)       | A tool for viewing CSV etc. in timeline format. Strong at filtering and grouping. | One of [Eric Zimmerman](https://www.sans.org/profiles/eric-zimmerman)'s tools. Basically the one to use for a quick look, but saving/loading project files is weak. |
 | [Quilt](https://github.com/sumeshi/quilt) | A fast CSV filtering / conversion tool.            | Made to address pain points when using [xsv](https://github.com/burntsushi/xsv) (processing 100GB-class text, chaining processing, etc.). |
+| [IRFlow Timeline](https://github.com/r3nzsec/irflow-timeline) | A tool influenced by Timeline Explorer. | Supports not just CSV but also various formats like EVTX, XLSX, and Plaso. It apparently has various other features as well. |
 | [LibreOffice Calc](https://www.libreoffice.org/)        | Open-source spreadsheet software.| Usable even where there's no Excel. Huge CSVs are a bit tough, huh.        |
 | Excel                   | Spreadsheet software from Microsoft. Everyone knows it.| Paid. Lots of users, but it can't load huge logs and auto-converts times to numbers. Unbelievable. |
 | Elasticsearch + Kibana  | Search engine / visualization tool. Efficiently analyzes super-large logs.   | Strong at log indexing and cross-search. The query language is a rookie-killer, so using it together with generative AI might help.                 |
@@ -757,6 +758,12 @@ Timeline Explorer is recommended for data filtering.
 You can filter with conditions like `Event Id = 4624`, click columns to sort, group, and do almost anything you can think of.
 However, note that the various filters can't be saved (bug?). Automation is also difficult, but for a "let's just roughly look at it" moment, this is fine.
 
+IRFlow Timeline is also quite polished. The usability is almost identical to Timeline Explorer. It apparently has various other features too, so I'd like to try them out.  
+The original repository is macOS-only, but Yamato Security has published a [Windows version](https://github.com/Yamato-Security/irflow-timeline-windows). Much appreciated.
+
+I personally wanted to use it on [Kali Linux](https://www.kali.org/) as well, so I made a [Linux version](https://github.com/sumeshi/irflow-timeline). I only changed the build settings without touching the internal logic, and it worked just fine.
+
+![irflow-kali](https://pbs.twimg.com/media/HT2ypZRa0AASmS9?format=jpg&name=4096x4096)
 
 Once you've established your investigation methodology to some extent, consider automating it.
 See [Log Analysis Patchwork](https://sumeshi.github.io/posts/works/quilt) for details.

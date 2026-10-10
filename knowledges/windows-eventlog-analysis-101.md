@@ -707,6 +707,7 @@ https://github.com/sumeshi/evtx2es
 | ----------------------- | ------------------------------------- | ------------------------------------ |
 | [Timeline Explorer](https://www.sans.org/tools/timeline-explorer)       | CSVなどをタイムライン形式で閲覧するツール。フィルタやグルーピングに強い。 | [Eric Zimmerman](https://www.sans.org/profiles/eric-zimmerman) 氏のツール群の一つ。パッと見るなら基本これでいいが、プロジェクトファイルの保存・読み込みが弱い。 |
 | [Quilt](https://github.com/sumeshi/quilt) | CSVの高速なフィルタ、変換ツール。            | [xsv](https://github.com/burntsushi/xsv)を使っていて困ったポイント（100GB級テキストの処理、処理のチェインなど）に対処するために作った。 |
+| [IRFlow Timeline](https://github.com/r3nzsec/irflow-timeline) | Timeline Explorerに影響を受けたツール。 | CSVだけでなく、EVTX, XLSX, Plasoなど様々なフォーマットに対応している。ほかにも様々な機能がある。 |
 | [LibreOffice Calc](https://ja.libreoffice.org/)        | オープンソースの表計算ソフト。| Excelがない環境でも使える。巨大CSVはちょっと厳しいね。        |
 | Excel                   | Microsoftが提供する表計算ソフト。みんな知ってるね。| 有償。利用者は多いが、大量ログは読み込めなかったり、勝手に時刻が数値変換されたりする。ふざけるな。 |
 | Elasticsearch + Kibana  | 検索エンジン/可視化ツール。超大量のログを効率的に分析できる。   | ログのインデックス作成と横断検索に強い。クエリは初見殺しなので生成AIと一緒に使うといいかもしれない。                 |
@@ -752,6 +753,12 @@ EvtxECmdがおすすめ。ファイル指定 `-f` もしくはフォルダ指定
 ただし、フィルタや条件式などが保存できない（バグ？）ので注意。
 それゆえ自動化も難しいが、とりあえずざっくり見てみるべ～のときはこれでいい。
 
+IRFlow Timeline もかなり完成度高い。使い勝手はTimeline Explorerとほぼ同じ。ほかにもいろいろ機能があるらしいので試してみたい。  
+元リポジトリはmacOS専用だが、大和セキュリティが [Windows版](https://github.com/Yamato-Security/irflow-timeline-windows) を公開している。ありがたい。
+
+個人的に [Kali Linux](https://www.kali.org/) でも使いたかったので [Linux版](https://github.com/sumeshi/irflow-timeline) を作った。内部ロジックは変えずにビルド設定だけ変えたけど十分動いた。
+
+![irflow-kali](https://pbs.twimg.com/media/HT2ypZRa0AASmS9?format=jpg&name=4096x4096)
 
 調査手法をある程度確立できたら、自動化を検討したってよい。  
 詳しくは [ログ解析パッチワーク](https://sumeshi.github.io/posts/works/quilt) を参照。
