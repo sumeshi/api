@@ -92,12 +92,10 @@ $ pip install ntfsdump ntfsfind
 MFTレコードが持つメタデータで条件を絞り込むこともできます。
 
 ```powershell
-# 2025年以降に作成された1MB以上の evtx,exe
-> ntfsfind.exe .\example.E01 --extension evtx,exe --size ">=1MB" --created ">=2025-01-01"
+# 2015年以降に作成された1MB以上の evtx,exe
+> ntfsfind.exe .\example.E01 --extension evtx,exe --size ">=1MB" --created ">=2015-01-01"
 /$Recycle.Bin/S-1-5-21-2425377081-3129163575-2985601102-1000/$RJEMT64.exe
-/$Recycle.Bin/S-1-5-21-2425377081-3129163575-2985601102-1000/$RJEMT64.exe:Zone.Identifier
 /Users/informant/Desktop/Download/ccsetup504.exe
-/Users/informant/Desktop/Download/ccsetup504.exe:Zone.Identifier
 ```
 
 ```powershell
@@ -112,9 +110,7 @@ MFTレコードが持つメタデータで条件を絞り込むこともでき�
 # 5MB以上の実行ファイルをテーブル表示
 > ntfsfind.exe .\example.E01 -e exe --size ">=5MB" --output-format table
 72096  ALLOC-FILE    68.3 MiB  2015-03-23 19:55:47  2015-03-23 19:56:53  -     /Users/informant/Downloads/icloudsetup.exe
-72096  ALLOC-FILE    68.3 MiB  2015-03-23 19:55:47  2015-03-23 19:56:53  -     /Users/informant/Downloads/icloudsetup.exe:Zone.Identifier
 75186  DELETED-FILE  5.1 MiB   2015-03-25 14:48:28  2015-03-25 14:48:28  -     /Users/informant/Desktop/Download/ccsetup504.exe
-75186  DELETED-FILE  5.1 MiB   2015-03-25 14:48:28  2015-03-25 14:48:28  -     /Users/informant/Desktop/Download/ccsetup504.exe:Zone.Identifier
 ```
 
 代表的なフィルタ条件は下記の通り。複数指定時はAND条件で結合されます。
@@ -125,11 +121,13 @@ MFTレコードが持つメタデータで条件を絞り込むこともでき�
 | `--path` | パス前方一致 |
 | `--size` | サイズ(例: `>=10MB`, `<1KB`, `4KB..10MB`) |
 | `--created / --modified / --accessed` | タイムスタンプ(例: `2024-01-01..2024-12-31`) |
-| `--timestamp-source` | 比較に使うタイムスタンプ(`$STANDARD_INFORMATION` か `$FILE_NAME`) |
+| `--timestamp-source` | 比較に使うタイムスタンプ。`si` (`$STANDARD_INFORMATION`、デフォルト) または `fn` (`$FILE_NAME`) |
 | `--deleted-only / --allocated-only` | 削除済み/アロケート済みエントリ |
 | `--files-only / --dirs-only` | ファイル/ディレクトリ |
-| `--ads-only / --no-ads` | 代替データストリームの有無 |
+| `--ads-only` | 名前付き `$DATA` ストリームのレコードのみを含める |
+| `--no-ads` | 名前付き `$DATA` ストリームのレコードを除外する |
 | `--attributes` | ファイル属性(例: `hidden,system,readonly`) |
+
 
 ### 出力フォーマット
 
@@ -172,7 +170,10 @@ MFTレコードが持つメタデータで条件を絞り込むこともでき�
 ```
 
 出力先には、元のディレクトリ構造が再現されます(`./dump/Windows/System32/winevt/Logs/System.evtx` など)。  
-フラットにしたいときは `--flat` オプション指定で同一フォルダに吐き出せます。
+
+フラットにしたいときは `--flat` オプション指定で同一フォルダに吐き出せます。出力されたファイルパスは、元のパスを `_` で結合したファイル名になり、たとえば `/Windows/System32/cmd.exe` は `Windows_System32_cmd.exe` として保存されます。
+
+ADSはWindowsでも通常ファイルとして保存できるよう、ファイル名の `:` が `_` に変換されます。上記の例では `$UsnJrnl:$J` が `$UsnJrnl_$J` になります。
 
 
 ### ntfsfindとの連携
