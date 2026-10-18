@@ -3,7 +3,7 @@ ARTEXを参考に、フォレンジックハーネス「FORENSIA」のループ�
 
 ## はじめに
 
-![forensia-logo](https://gist.githubusercontent.com/sumeshi/c2f430d352ae763273faadf9616a29e5/raw/f0b46d7a1801f359ddae0927ba5c4c4f969b1953/forensia2.svg)
+![forensia-logo](https://github.com/user-attachments/assets/34809edf-d928-47cf-b4d1-e1800c6f5b2d)
 
 私は、「[FORENSIA](https://github.com/sumeshi/forensia)」というデジタルフォレンジックハーネスを作っています。
 
