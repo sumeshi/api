@@ -141,11 +141,7 @@ If you can find a suspicious event as a starting point, diligently tracing the t
 The Event IDs listed in this section are also organized into a quick-reference poster.
 Stick it on the bathroom wall and memorize it.
 
-> Poster: How Do You Investigate Windows Event Logs?
-
-![poster](https://github.com/user-attachments/assets/f910d7eb-b273-42d9-82e5-fc46135c2bf5)
-
-https://github.com/sumeshi/sipdep-archives
+[![poster](https://github.com/user-attachments/assets/f910d7eb-b273-42d9-82e5-fc46135c2bf5)](https://github.com/sumeshi/sipdep-archives)
 
 
 ### Logon / Authentication
