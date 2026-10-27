@@ -141,11 +141,7 @@ Securityログに限っていえば、[Security Log Encyclopedia](https://www.ul
 本項に記載のイベントID一覧は、早見表としてポスターに整理している。  
 トイレの壁に貼って覚えよう。
 
-> ポスター: 君たちはどうWindowsイベントログを調査するか
-
-![poster](https://github.com/user-attachments/assets/a1f350ed-8109-4abc-817e-f66131ff315c)
-
-https://github.com/sumeshi/sipdep-archives
+[![poster](https://github.com/user-attachments/assets/a1f350ed-8109-4abc-817e-f66131ff315c)](https://github.com/sumeshi/sipdep-archives)
 
 
 ### ログオン・認証
