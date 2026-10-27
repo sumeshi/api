@@ -1,10 +1,6 @@
 # How Do You Investigate Windows Event Logs?
 Vague notes on Windows event log investigation. I'll add more as I remember.
 
-![title](https://github.com/user-attachments/assets/519ecf99-7a14-40a1-8e17-cc8690da1e86)
-
-> **Note:** This is the English translation of the Japanese original. The Japanese version is available at https://sumeshi.github.io/posts/knowledges/windows-eventlog-analysis-101.
-
 
 ## Introduction
 
@@ -146,6 +142,7 @@ The Event IDs listed in this section are also organized into a quick-reference p
 Stick it on the bathroom wall and memorize it.
 
 > Poster: How Do You Investigate Windows Event Logs?
+![poster](https://github.com/user-attachments/assets/f910d7eb-b273-42d9-82e5-fc46135c2bf5)
 
 https://github.com/sumeshi/sipdep-archives
 
