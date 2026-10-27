@@ -135,8 +135,16 @@ Securityログに限っていえば、[Security Log Encyclopedia](https://www.ul
 
 ## Appendix-1: 主要なEvent ID
 
-**とっかかりを見つける** という観点で、以下の主要なEvent IDから気になるポイントを見ていくと良い。  
+調査の **とっかかりを見つける** という観点で、以下の主要なEvent IDから気になるポイントを見ていくと良い。  
 起点となる怪しいイベントが分かれば、その前後の時系列を一生懸命追っていけば未知のイベントでも役立つものがあるはず。
+
+本項に記載のイベントID一覧は、早見表としてポスターに整理している。  
+トイレの壁に貼って覚えよう。
+
+> ポスター: 君たちはどうWindowsイベントログを調査するか
+
+https://github.com/sumeshi/sipdep-archives
+
 
 ### ログオン・認証
 
@@ -615,7 +623,7 @@ evtxの名前は環境によって違うことがあるので注意。
 - Microsoft-Windows-NTLM%4Operational.evtx
 - Microsoft-Windows-PowerShell%4Admin.evtx
 - Microsoft-Windows-PowerShell%4Operational.evtx
-- Microsoft-Windows-RemoteDesktopServicesRdpCoreTS%4Operational.evtx
+- Microsoft-Windows-RemoteDesktopServices-RdpCoreTS%4Operational.evtx
 - Microsoft-Windows-SMBClient%4Operational.evtx
 - Microsoft-Windows-SMBClient%4Security.evtx
 - Microsoft-Windows-SMBServer%4Operational.evtx
@@ -697,24 +705,24 @@ GUIで検索やフィルタができるので、初期の確認には十分使�
 | [EvtxECmd](https://github.com/EricZimmerman/evtx) | EVTXファイルをCSVやJSONに変換できるコマンドラインツール。              | SANS講師の [Eric Zimmerman](https://www.sans.org/profiles/eric-zimmerman) 氏のツール群の一つ。DFIR用途で広く使われている。 |
 | [evtx2es/evtx2json](https://github.com/sumeshi/evtx2es)    | EVTXファイルをElasticsearchにインポートする/JSON変換するコマンドラインツール。    | 当時デファクトだったPython製パーサがハチャメチャに遅かったので作った。ElasticsearchやDuckDBなど、調査システムに組み込みたい場合に便利。 |
 |[plaso](https://github.com/log2timeline/plaso)|様々なアーティファクトからスーパータイムラインを生成するツール|単一の変換ツールというよりはフレームワークに近い。かなり複雑。|
-|[log2timeline](https://code.google.com/archive/p/log2timeline/downloads)|plasoの前身であるperl版。こっちは比較的シンプル。|はるか古代のツールなのでよほどの理由がなければ今から採用しなくてもよい。|
+|[log2timeline](https://code.google.com/archive/p/log2timeline/downloads)|plasoの前身であるperl版。こっちは比較的シンプル。| はるか古代のツールなので、よほどの理由がなければ今から採用しなくてもよい。|
 | PowerShell | Windows標準のスクリプト言語。イベントログの抽出・整形に利用できる。           | 一度作っておけば使い回せる。バグがあると二次被害が起きたりするので注意。                     |
-| [Log Parser](https://www.microsoft.com/ja-jp/download/details.aspx?id=24659) | Microsoftが提供していたコマンドラインツール。SQLライクなクエリでログを解析できる。 | 公式ツールだが、開発は終了している。ドキュメントも全然ない。誰か書いてほしい。                     |
+| [Log Parser](https://www.microsoft.com/ja-jp/download/details.aspx?id=24659) | Microsoftが提供していたコマンドラインツール。SQLライクなクエリでログを解析できる。 | 残念ながら開発は終了している。ドキュメントも全然ない。誰か書いてほしい。                     |
 
 https://github.com/sumeshi/evtx2es
 
 | 分析・整形ツール                | 概要                                    | 備考                                   |
 | ----------------------- | ------------------------------------- | ------------------------------------ |
 | [Timeline Explorer](https://www.sans.org/tools/timeline-explorer)       | CSVなどをタイムライン形式で閲覧するツール。フィルタやグルーピングに強い。 | [Eric Zimmerman](https://www.sans.org/profiles/eric-zimmerman) 氏のツール群の一つ。パッと見るなら基本これでいいが、プロジェクトファイルの保存・読み込みが弱い。 |
-| [Quilt](https://github.com/sumeshi/quilt) | CSVの高速なフィルタ、変換ツール。            | [xsv](https://github.com/burntsushi/xsv)を使っていて困ったポイント（100GB級テキストの処理、処理のチェインなど）に対処するために作った。 |
-| [IRFlow Timeline](https://github.com/r3nzsec/irflow-timeline) | Timeline Explorerに影響を受けたツール。 | CSVだけでなく、EVTX, XLSX, Plasoなど様々なフォーマットに対応している。ほかにも様々な機能がある。 |
-| [LibreOffice Calc](https://ja.libreoffice.org/)        | オープンソースの表計算ソフト。| Excelがない環境でも使える。巨大CSVはちょっと厳しいね。        |
-| Excel                   | Microsoftが提供する表計算ソフト。みんな知ってるね。| 有償。利用者は多いが、大量ログは読み込めなかったり、勝手に時刻が数値変換されたりする。ふざけるな。 |
+| [Quilt](https://github.com/sumeshi/quilt) | CSV, JSONLの高速なフィルタ、変換ツール。            | [xsv](https://github.com/burntsushi/xsv)を使っていて困ったポイント（100GB級テキストの処理、処理のチェインなど）に対処するために作った。 |
+| [IRFlow Timeline](https://github.com/r3nzsec/irflow-timeline) | Timeline Explorerに影響を受けたツール。 | CSVだけでなく、EVTX, XLSX, Plasoなど様々なフォーマットに対応している。ほかにも機能が豊富。 |
+| [LibreOffice Calc](https://ja.libreoffice.org/)        | オープンソースの表計算ソフト。| Excelライセンスを持ってなくても使える。巨大CSVはちょっと厳しいね。        |
+| Excel                   | みんなご存じの表計算ソフト。| 有償。さすがに安定しているしネット上に知見も多い。大量ログは読み込めなかったり、勝手に時刻が数値変換されたりする。ふざけるな。 |
 | Elasticsearch + Kibana  | 検索エンジン/可視化ツール。超大量のログを効率的に分析できる。   | ログのインデックス作成と横断検索に強い。クエリは初見殺しなので生成AIと一緒に使うといいかもしれない。                 |
-| [Event Log Explorer](https://eventlogxp.com/ja/) | イベントログの閲覧と分析に特化したGUIツール。 | 商用利用は有償。SANSトレーニングでも使われている信頼のあるツールだが、あまり使いやすいとは思えない。 |
-| [TimeSketch](https://github.com/google/timesketch)  | Google製ログ分析補助ツール。GUIで怪しいやつをフラグ付けとかできる。| plasoと親和性が高い。[使ってみた](https://github.com/google/timesketch) が、Webアプリケーションだからかマジで遅い。複数人で同時作業するとかなら良さがあるのかもしれない。 |
-| [Log Parser Studio](https://learn.microsoft.com/ja-jp/exchange/iis-logs-and-log-parser-studio-reports-exchange-2013-help)  | Log ParserのGUIフロントエンド。   | たぶん配布停止。探せばまだあるが。           |
-| [Log Parser Lizard](https://log-parser.com/)  | Log Parser系のGUIツール。      | Log Parser Studioより高機能。でも使い方がイマイチわからない。      |
+| [Event Log Explorer](https://eventlogxp.com/ja/) | イベントログの閲覧と分析に特化したGUIツール。 | 商用利用は有償。SANSトレーニングでも使われている信頼のあるツール。イベントビューアーの進化系のような使い心地。 |
+| [TimeSketch](https://github.com/google/timesketch)  | Google製ログ分析補助ツール。| plasoと親和性が高い。複数人で同時作業できるのが強み。[使ってみた](https://zenn.dev/sum3sh1/articles/3096c7409c9144) が、速度にはかなり課題がある。Redisなどのスペックを盛れば多少良くなるんだろうか？ |
+| [Log Parser Studio](https://learn.microsoft.com/ja-jp/exchange/iis-logs-and-log-parser-studio-reports-exchange-2013-help)  | Log ParserのGUIフロントエンド。 | MS公式なのでできればこれを使うのがベストなのだろうが、もうメンテされていない。資料もあまりないので、使い方もいまいちわかっていない。 |
+| [Log Parser Lizard](https://log-parser.com/)  | Log Parser系のGUIツール。      | Log Parser Studioより高機能。画面ポチポチで分析というよりは、クエリ記述をサポートしてくれるIDEに近い。なんだか微妙に懐かしいUIだ。 |
 | Splunk                  | 商用のログ管理・分析プラットフォーム。大量ログの検索・可視化に強い。    | 嫌い。                 |
 
 https://github.com/sumeshi/quilt

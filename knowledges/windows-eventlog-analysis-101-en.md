@@ -139,8 +139,16 @@ To avoid needlessly worrying or confusing the other party with baseless hypothes
 
 ## Appendix-1: Major Event IDs
 
-From the perspective of **finding a starting point**, it's good to look at the following major Event IDs.
+From the perspective of **finding a starting point for an investigation**, it's good to look at the following major Event IDs.
 If you can find a suspicious event as a starting point, diligently tracing the timeline before and after it should turn up something useful even for unknown events.
+
+The Event IDs listed in this section are also organized into a quick-reference poster.
+Stick it on the bathroom wall and memorize it.
+
+> Poster: How Do You Investigate Windows Event Logs?
+
+https://github.com/sumeshi/sipdep-archives
+
 
 ### Logon / Authentication
 
@@ -621,7 +629,7 @@ For now, when you want to narrow by Provider/Channel count and skim, focus on th
 - Microsoft-Windows-NTLM%4Operational.evtx
 - Microsoft-Windows-PowerShell%4Admin.evtx
 - Microsoft-Windows-PowerShell%4Operational.evtx
-- Microsoft-Windows-RemoteDesktopServicesRdpCoreTS%4Operational.evtx
+- Microsoft-Windows-RemoteDesktopServices-RdpCoreTS%4Operational.evtx
 - Microsoft-Windows-SMBClient%4Operational.evtx
 - Microsoft-Windows-SMBClient%4Security.evtx
 - Microsoft-Windows-SMBServer%4Operational.evtx
@@ -705,7 +713,7 @@ Below is my personal recommendation order.
 |[plaso](https://github.com/log2timeline/plaso)|A tool that creates a super timeline from various artifacts.|Closer to a framework than a single conversion tool. Fairly complex.|
 |[log2timeline](https://code.google.com/archive/p/log2timeline/downloads)|The perl-based predecessor to plaso. This one is relatively simple.|A tool from way back in ancient times, so unless you have a strong reason, you don't need to adopt it now.|
 | PowerShell | Windows' built-in scripting language. Can be used to extract and shape event logs.           | Reusable once you make it. Watch out, because a bug can cause secondary damage.                     |
-| [Log Parser](https://www.microsoft.com/en-us/download/details.aspx?id=24659) | A command-line tool provided by Microsoft. Analyzes logs with SQL-like queries. | An official tool, but development has ended. Barely any docs. Someone please write them.                     |
+| [Log Parser](https://www.microsoft.com/en-us/download/details.aspx?id=24659) | A command-line tool provided by Microsoft. Analyzes logs with SQL-like queries. | Unfortunately, development has ended. Barely any docs. Someone please write them.                     |
 
 https://github.com/sumeshi/evtx2es
 
@@ -713,15 +721,15 @@ https://github.com/sumeshi/evtx2es
 | Analysis / Shaping Tool                | Overview                                    | Notes                                   |
 | ----------------------- | ------------------------------------- | ------------------------------------ |
 | [Timeline Explorer](https://www.sans.org/tools/timeline-explorer)       | A tool for viewing CSV etc. in timeline format. Strong at filtering and grouping. | One of [Eric Zimmerman](https://www.sans.org/profiles/eric-zimmerman)'s tools. Basically the one to use for a quick look, but saving/loading project files is weak. |
-| [Quilt](https://github.com/sumeshi/quilt) | A fast CSV filtering / conversion tool.            | Made to address pain points when using [xsv](https://github.com/burntsushi/xsv) (processing 100GB-class text, chaining processing, etc.). |
-| [IRFlow Timeline](https://github.com/r3nzsec/irflow-timeline) | A tool influenced by Timeline Explorer. | Supports not just CSV but also various formats like EVTX, XLSX, and Plaso. It apparently has various other features as well. |
-| [LibreOffice Calc](https://www.libreoffice.org/)        | Open-source spreadsheet software.| Usable even where there's no Excel. Huge CSVs are a bit tough, huh.        |
-| Excel                   | Spreadsheet software from Microsoft. Everyone knows it.| Paid. Lots of users, but it can't load huge logs and auto-converts times to numbers. Unbelievable. |
+| [Quilt](https://github.com/sumeshi/quilt) | A fast CSV / JSONL filtering / conversion tool.            | Made to address pain points when using [xsv](https://github.com/burntsushi/xsv) (processing 100GB-class text, chaining processing, etc.). |
+| [IRFlow Timeline](https://github.com/r3nzsec/irflow-timeline) | A tool influenced by Timeline Explorer. | Supports not just CSV but also various formats like EVTX, XLSX, and Plaso. It also has plenty of other features. |
+| [LibreOffice Calc](https://www.libreoffice.org/)        | Open-source spreadsheet software.| Usable even without an Excel license. Huge CSVs are a bit tough, huh.        |
+| Excel                   | The spreadsheet software everyone knows.| Paid. It's reliable, and there's plenty of information about it online. It can still fail to load huge logs and auto-convert times to numbers. Unbelievable. |
 | Elasticsearch + Kibana  | Search engine / visualization tool. Efficiently analyzes super-large logs.   | Strong at log indexing and cross-search. The query language is a rookie-killer, so using it together with generative AI might help.                 |
-| [Event Log Explorer](https://eventlogxp.com/) | A GUI tool specialized for viewing and analyzing event logs. | Paid for commercial use. A trusted tool also used in SANS training, but I don't find it very easy to use. |
-| [TimeSketch](https://github.com/google/timesketch)  | A Google-made log analysis support tool. You can flag suspicious ones in the GUI.| High affinity with plaso. I [tried it](https://github.com/google/timesketch), and it is seriously slow. Maybe it has merits if multiple people work simultaneously. |
-| [Log Parser Studio](https://learn.microsoft.com/en-us/exchange/iis-logs-and-log-parser-studio-reports-exchange-2013-help)  | A GUI front-end for Log Parser.   | Probably no longer distributed. You can still find it if you look, though.           |
-| [Log Parser Lizard](https://log-parser.com/)  | A GUI tool in the Log Parser family.      | More capable than Log Parser Studio. But I can't really figure out how to use it.      |
+| [Event Log Explorer](https://eventlogxp.com/) | A GUI tool specialized for viewing and analyzing event logs. | Paid for commercial use. A trusted tool also used in SANS training. Feels like an upgraded Event Viewer. |
+| [TimeSketch](https://github.com/google/timesketch)  | A Google-made log analysis support tool.| Works well with plaso. Its strength is letting multiple people work together. I [tried it](https://zenn.dev/sum3sh1/articles/3096c7409c9144), but performance is a serious issue. I wonder if giving Redis and the other components more resources would help? |
+| [Log Parser Studio](https://learn.microsoft.com/en-us/exchange/iis-logs-and-log-parser-studio-reports-exchange-2013-help)  | A GUI front-end for Log Parser.   | As an official Microsoft tool, it would probably be the best choice if possible, but it's no longer maintained. There's little documentation either, so I haven't quite figured out how to use it.           |
+| [Log Parser Lizard](https://log-parser.com/)  | A GUI tool in the Log Parser family.      | More capable than Log Parser Studio. It's closer to an IDE that helps you write queries than a tool for point-and-click analysis. The UI feels oddly nostalgic.      |
 | Splunk                  | A commercial log management / analysis platform. Strong at searching and visualizing huge logs.    | I hate it.                 |
 
 https://github.com/sumeshi/quilt
