@@ -142,6 +142,7 @@ Securityログに限っていえば、[Security Log Encyclopedia](https://www.ul
 トイレの壁に貼って覚えよう。
 
 > ポスター: 君たちはどうWindowsイベントログを調査するか
+![poster](https://github.com/user-attachments/assets/a1f350ed-8109-4abc-817e-f66131ff315c)
 
 https://github.com/sumeshi/sipdep-archives
 
