@@ -380,6 +380,10 @@ Windows Updateなどのよく使われるログであれば、それに特化し
 | [PerfView](https://github.com/microsoft/perfview) | 収録期間・イベント数・ロスト数を確認し、種類やプロセスで絞ることが可能 |
 | [Windows Performance Analyzer（WPA）](https://learn.microsoft.com/ja-jp/windows-hardware/test/wpt/windows-performance-analyzer) | Provider、時刻、各イベントの項目で絞り込み、CPU・I/Oなどの情報と合わせてグラフ表示などが可能 |
 
+![perfview](https://github.com/user-attachments/assets/5cd30be7-1efb-40aa-a416-85b5c22cc05c)
+
+![wpa](https://github.com/user-attachments/assets/5c013425-15f2-4938-a44d-c0ac9e02f8a8)
+
 イベントのグラフ表示など、詳細な情報を確認できます。ただし、主な用途はデバッグやパフォーマンスチューニングのような気がします。以下の記事が詳しいです。
 
 [PerfView / Windows Performance Analyzer (WPA) の使い方](https://qiita.com/kouzimiso/items/a74466f8fc2032683845)
