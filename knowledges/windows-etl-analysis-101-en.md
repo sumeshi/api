@@ -418,6 +418,10 @@ The following two Microsoft GUI tools are also well known.
 | [PerfView](https://github.com/microsoft/perfview) | Inspect trace duration, event counts, and lost events; filter by event type or process |
 | [Windows Performance Analyzer (WPA)](https://learn.microsoft.com/en-us/windows-hardware/test/wpt/windows-performance-analyzer) | Filter by Provider, time, and event fields; visualize CPU, I/O, and other information in graphs |
 
+![perfview](https://github.com/user-attachments/assets/5cd30be7-1efb-40aa-a416-85b5c22cc05c)
+
+![wpa](https://github.com/user-attachments/assets/5c013425-15f2-4938-a44d-c0ac9e02f8a8)
+
 Both provide detailed views of trace data, including graphical representations of events.
 
 Their primary use cases seem to be debugging and performance tuning rather than forensics, though.
